@@ -109,13 +109,41 @@ class plane(): # class of plane
 
 	def move(self): # physics simulation
 		# Var
-		self.drag_force = drag_coef * (self.velocity_x ** 2) * math.cos(math.radians(self.attack_angle)) # please comemnt
-		self.lift_force = gravity * (1 + math.sin(math.radians(2*self.attack_angle)))
-		self.thrust = thrust_coef * self.throttle * math.cos(math.radians(self.attack_angle))
-		self.velocity_x += ((self.thrust - self.drag_force)/fps)/self.mass
-		self.velocity_y += ((self.lift_force - gravity)/fps)/self.mass
+		print("attack angle: ", self.attack_angle)
+		# Thrust pushes the plane forward, depends on the position of the throttle 
+		self.thrust_x = thrust_coef * self.throttle * math.cos(math.radians(self.attack_angle))
+		self.thrust_y = thrust_coef * self.throttle * math.sin(math.radians(self.attack_angle))
+		print ("thrust_x: ", self.thrust_x, ", thrust_y: ", self.thrust_y)
+
+		# Drag force is caused by air friction and acts in the direction opposite to thrust 
+		self.drag_force_x = drag_coef * (self.velocity ** 2) * math.cos(math.radians(self.attack_angle))
+		self.drag_force_y = drag_coef * (self.velocity ** 2) * math.sin(math.radians(self.attack_angle))
+		print ("drag_x: ", self.drag_force_x, ", drag_y: ", self.drag_force_y)
+
+		# Lift force is created by wing geometry, acts in the direction perpendicular the the wing surface
+		self.lift_force_y = gravity + lift_coef * (self.velocity ** 2) * math.sin(math.radians(2*self.attack_angle))
+		self.lift_force_x = lift_coef * math.sin(math.radians(2*self.attack_angle))
+		print ("lift_y: ", self.lift_force_y, ", lift_x: ", self.lift_force_x)
+
+		total_force_x = self.thrust_x - self.drag_force_x - self.lift_force_x;
+		total_force_y = self.lift_force_y + self.thrust_y - gravity - self.drag_force_y
+		print ("total_force_x: ", total_force_x, ", total_force_y: ", total_force_y)
+
+
+		# New velocity is based on the velocity on the previous frame and the force acting on the plane on the current frame.
+		# F = ma = m(v1-v0)/t; v1 = v0 + Ft/m, where t = 1/fps, so v1 = v0 + F/(fps*m) 
+		self.velocity_x += total_force_x/(fps*self.mass)
+		self.velocity_y = total_force_y/(fps*self.mass)
+
+		self.velocity = math.sqrt(self.velocity_x**2 + self.velocity_y**2)
+
+		print ("velocity_x: ", self.velocity_x, ", velocity_y: ", self.velocity_y)
+		print ("total velocity: ", self.velocity)
+
+		# Conversion from m/s to pixels/frame
 		delta_x = 4 * self.velocity_x/fps
 		delta_y = 4 * self.velocity_y/fps
+
 		# Y force
 		#t_y = self.throttle * math.sin(math.radians(self.attack_angle)) # Thrust calculation on the y plane
 		#d_y = self.drag_force * math.sin(math.radians(self.attack_angle)) # drag calculation on the y plane
@@ -129,9 +157,7 @@ class plane(): # class of plane
 		#l_x = self.lift_force * math.sin(math.radians(self.attack_angle)) # lift calculation on the x plane
 		#f_x = t_x - d_x# - l_x # Total force in x direction
 		self.x += delta_x
-		self.y += delta_y
-
-
+		self.y -= delta_y
 
 	def draw(self): #spirte print function
 		if self.state == True: # check if sprite is alive
