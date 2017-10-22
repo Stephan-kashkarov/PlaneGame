@@ -118,7 +118,7 @@ class plane(): # class of plane
 		self.thrust_y = thrust_coef * self.throttle * math.sin(math.radians(self.attack_angle))
 		print ("thrust_x: ", self.thrust_x, ", thrust_y: ", self.thrust_y)
 
-		# Drag force is caused by air friction and acts in the direction opposite to thrust 
+		# Drag force is caused by air friction and acts in the direction opposite to thrust
 		self.drag_force_x = drag_coef * (self.velocity ** 2) * math.cos(math.radians(self.attack_angle))
 		self.drag_force_y = drag_coef * (self.velocity ** 2) * math.sin(math.radians(self.attack_angle))
 		print ("drag_x: ", self.drag_force_x, ", drag_y: ", self.drag_force_y)
@@ -134,7 +134,7 @@ class plane(): # class of plane
 
 
 		# New velocity is based on the velocity on the previous frame and the force acting on the plane on the current frame.
-		# F = ma = m(v1-v0)/t; v1 = v0 + Ft/m, where t = 1/fps, so v1 = v0 + F/(fps*m) 
+		# F = ma = m(v1-v0)/t; v1 = v0 + Ft/m, where t = 1/fps, so v1 = v0 + F/(fps*m)
 		self.velocity_x += total_force_x/(fps*self.mass)
 		self.velocity_y += total_force_y/(fps*self.mass)
 
@@ -238,11 +238,12 @@ def travel():
 		player.y += y_change # add the change to value
 
 
-def battle(): #main function of code
-	kills = 0 # score keeper
+def battle():
 	player = plane(player_sprite, 0, 720, 0, True) # make a object in class plane
 	attack_angle_change = 0 # set a variable to add to attack angel near the end of loop
 	game_end = False # Exit variable
+	play = False # testing var
+	speed_change = 0 # set a variable to add to throttle near the end of loop
 	while not game_end: # game loop
 		for event in pygame.event.get(): # check for input
 			if event.type == pygame.QUIT: # quit funct
@@ -250,21 +251,31 @@ def battle(): #main function of code
 					quit()
 			if event.type == pygame.KEYDOWN: #if a key is pressed
 				if event.key == pygame.K_UP: # if that key is up
-					player.attack_angle += 5 # sets delta ange to +5
-					if player.attack_angle >= 360: #allows for sub 360* movement
-						player.attack_angle -= 360
-				elif event.key == pygame.K_DOWN: # if key is down
-					player.attack_angle -= 5 # set delta angle to -5
-					if player.attack_angle >= 360: # allows for sub 360* movemnt
-						player.attack_angle -= 360
-				elif event.key == pygame.K_LEFT: # left key
-					if player.throttle >= 0.1: #check throttle is not min
-						player.throttle -= 0.1 # set the throttle to -10%
-				elif event.key == pygame.K_RIGHT:# Right key
 					if player.throttle <= 0.9: # if the throttle is not max
-						player.throttle += 0.1 # set speed to 10%
+						speed_change = 0.1 # set speed to 10%
+				elif event.key == pygame.K_DOWN: # if key is down
+					if player.throttle >= 0.1: #check throttle is not min
+						speed_change = -0.1 # set the throttle to -10%
+				if event.key == pygame.K_LEFT: # left key
+					attack_angle_change = -5 # set delta angle to -5
+					if attack_angle_change >= 360: # allows for sub 360* movemnt
+						attack_angle_change -= 360
+				elif event.key == pygame.K_RIGHT:# Right key
+					attack_angle_change = 5 # sets delta ange to +5
+					if attack_angle_change >= 360: #allows for sub 360* movement
+						attack_angle_change -= 360
+
 				elif event.key == pygame.K_SPACE:
-					player.move() # simulates one frame of movemnt
+					play = True # testing var
+
+			elif event.type == pygame.KEYUP: # if key stops being pressed
+				attack_angle_change = 0 # set change to 0
+				speed_change = 0 # set change to 0
+				play = False # testing var
+
+
+		player.attack_angle += attack_angle_change # and the change to value
+		player.throttle += speed_change # add the change to value
 
 		if player.attack_angle <= 90 or player.attack_angle >=270: # makes the sprite alwas face upwards
 			player.sprite = player_sprite # sprite 1
@@ -275,11 +286,15 @@ def battle(): #main function of code
 		#debug circuit (could be used for crash detection)
 		if player.x + sprite_width >= display_width: #left border
 			player.x = display_width/2
+			player.y = display_height - sprite_height - 5
 		elif player.x <= 0: #right border
 			player.x = display_width/2
+			player.y = display_height - sprite_height - 5
 		elif player.y <= 0: #top border
+			player.x = display_width/2
 			player.y = display_height - sprite_height - 5
 		elif player.y + sprite_height >= display_height: #bottom border
+			player.x = display_width/2
 			player.y = display_height - sprite_height - 5
 
 		# DRAW LOOP
@@ -296,6 +311,8 @@ def battle(): #main function of code
 
 
 		# player.move() # simulates one frame of movemnt
+		if play == True: #testing var
+			player.move() # simulates one frame of movemnt
 		if player.y <= 0: # checks if sprite is too low
 			player.y = 0  # sets a floor
 		player.draw() # draws the plane

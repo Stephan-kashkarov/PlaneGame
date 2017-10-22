@@ -117,6 +117,7 @@ def run():
 	player = plane(player_sprite, 0, 720, 0, True) # make a object in class plane
 	attack_angle_change = 0 # set a variable to add to attack angel near the end of loop
 	game_end = False # Exit variable
+	play = False # testing var
 	speed_change = 0 # set a variable to add to throttle near the end of loop
 	while not game_end: # game loop
 		for event in pygame.event.get(): # check for input
@@ -139,9 +140,14 @@ def run():
 					if attack_angle_change >= 360: #allows for sub 360* movement
 						attack_angle_change -= 360
 
+				elif event.key == pygame.K_SPACE:
+					play = True # testing var
+
 			elif event.type == pygame.KEYUP: # if key stops being pressed
 				attack_angle_change = 0 # set change to 0
 				speed_change = 0 # set change to 0
+				play = False # testing var
+
 
 		player.attack_angle += attack_angle_change # and the change to value
 		player.throttle += speed_change # add the change to value
@@ -168,7 +174,8 @@ def run():
 
 		# DRAW LOOP
 		gameDisplay.blit(background, (0,0)) # prints the background
-		player.move() # simulates one frame of movemnt
+		if play == True: #testing var
+			player.move() # simulates one frame of movemnt
 		if player.y <= 0: # checks if sprite is too low
 			player.y = 0  # sets a floor
 		player.draw() # draws the plane
