@@ -20,6 +20,7 @@ xp = 0 # Experience points
 gravity = 9800 # Gravity Coeficient
 drag_coef = 1 # Drag coeficient
 thrust_coef = 65536 # thrust coeficient
+lift_coef = 10
 
 
 #COLOURS
@@ -99,6 +100,7 @@ class plane(): # class of plane
 		self.state = True # dead or alive
 		self.ai = ai # check for AI
 		self.throttle = 0.0 # throttle of sprite
+		self.velocity = 0 # velocity in the x direction
 		self.velocity_x = 0 # velocity in the x direction
 		self.velocity_y = 0 # velocity in the y direction
 		self.drag_force = 0 # drag variable
@@ -110,7 +112,7 @@ class plane(): # class of plane
 	def move(self): # physics simulation
 		# Var
 		print("attack angle: ", self.attack_angle)
-		# Thrust pushes the plane forward, depends on the position of the throttle 
+		# Thrust pushes the plane forward, depends on the position of the throttle
 		self.thrust_x = thrust_coef * self.throttle * math.cos(math.radians(self.attack_angle))
 		self.thrust_y = thrust_coef * self.throttle * math.sin(math.radians(self.attack_angle))
 		print ("thrust_x: ", self.thrust_x, ", thrust_y: ", self.thrust_y)
@@ -133,7 +135,7 @@ class plane(): # class of plane
 		# New velocity is based on the velocity on the previous frame and the force acting on the plane on the current frame.
 		# F = ma = m(v1-v0)/t; v1 = v0 + Ft/m, where t = 1/fps, so v1 = v0 + F/(fps*m) 
 		self.velocity_x += total_force_x/(fps*self.mass)
-		self.velocity_y = total_force_y/(fps*self.mass)
+		self.velocity_y += total_force_y/(fps*self.mass)
 
 		self.velocity = math.sqrt(self.velocity_x**2 + self.velocity_y**2)
 
@@ -161,7 +163,7 @@ class plane(): # class of plane
 
 	def draw(self): #spirte print function
 		if self.state == True: # check if sprite is alive
-			img, img_rect = rot_center(self.sprite, self.rect, self.attack_angle*-1) # sets the rotation of sprite
+			img, img_rect = rot_center(self.sprite, self.rect, self.attack_angle) # sets the rotation of sprite
 			gameDisplay.blit(img, (round(self.x), round(self.y))) # prints the sprite
 
 
@@ -184,7 +186,7 @@ def intro(): # The intro to the game include the main menu
 		text_rect.center = ((display_width/2), (display_height/2))
 		gameDisplay.blit(text_surf,text_rect)
 
-		button("PLAY!", 200, 450, 200, 100, d_green, green, main) # makes a play button
+		button("PLAY!", 200, 450, 200, 100, d_green, green, battle) # makes a play button
 		button("Planes", 540, 450, 200, 100, d_grey, grey,planes) # makes a manual button
 		button("QUIT!", 880, 450, 200, 100, d_red, red, leave) # makes a quit button
 
@@ -241,7 +243,6 @@ def battle(): #main function of code
 	player = plane(player_sprite, 0, 720, 0, True) # make a object in class plane
 	attack_angle_change = 0 # set a variable to add to attack angel near the end of loop
 	game_end = False # Exit variable
-	speed_change = 0 # set a variable to add to throttle near the end of loop
 	while not game_end: # game loop
 		for event in pygame.event.get(): # check for input
 			if event.type == pygame.QUIT: # quit funct
@@ -249,26 +250,21 @@ def battle(): #main function of code
 					quit()
 			if event.type == pygame.KEYDOWN: #if a key is pressed
 				if event.key == pygame.K_UP: # if that key is up
-					if player.throttle <= 0.9: # if the throttle is not max
-						speed_change = 0.1 # set speed to 10%
+					player.attack_angle += 5 # sets delta ange to +5
+					if player.attack_angle >= 360: #allows for sub 360* movement
+						player.attack_angle -= 360
 				elif event.key == pygame.K_DOWN: # if key is down
+					player.attack_angle -= 5 # set delta angle to -5
+					if player.attack_angle >= 360: # allows for sub 360* movemnt
+						player.attack_angle -= 360
+				elif event.key == pygame.K_LEFT: # left key
 					if player.throttle >= 0.1: #check throttle is not min
-						speed_change = -0.1 # set the throttle to -10%
-				if event.key == pygame.K_LEFT: # left key
-					attack_angle_change = -5 # set delta angle to -5
-					if attack_angle_change >= 360: # allows for sub 360* movemnt
-						attack_angle_change -= 360
+						player.throttle -= 0.1 # set the throttle to -10%
 				elif event.key == pygame.K_RIGHT:# Right key
-					attack_angle_change = 5 # sets delta ange to +5
-					if attack_angle_change >= 360: #allows for sub 360* movement
-						attack_angle_change -= 360
-
-			elif event.type == pygame.KEYUP: # if key stops being pressed
-				attack_angle_change = 0 # set change to 0
-				speed_change = 0 # set change to 0
-
-		player.attack_angle += attack_angle_change # and the change to value
-		player.throttle += speed_change # add the change to value
+					if player.throttle <= 0.9: # if the throttle is not max
+						player.throttle += 0.1 # set speed to 10%
+				elif event.key == pygame.K_SPACE:
+					player.move() # simulates one frame of movemnt
 
 		if player.attack_angle <= 90 or player.attack_angle >=270: # makes the sprite alwas face upwards
 			player.sprite = player_sprite # sprite 1
@@ -279,15 +275,11 @@ def battle(): #main function of code
 		#debug circuit (could be used for crash detection)
 		if player.x + sprite_width >= display_width: #left border
 			player.x = display_width/2
-			player.y = display_height - sprite_height - 5
 		elif player.x <= 0: #right border
 			player.x = display_width/2
-			player.y = display_height - sprite_height - 5
 		elif player.y <= 0: #top border
-			player.x = display_width/2
 			player.y = display_height - sprite_height - 5
 		elif player.y + sprite_height >= display_height: #bottom border
-			player.x = display_width/2
 			player.y = display_height - sprite_height - 5
 
 		# DRAW LOOP
@@ -298,12 +290,12 @@ def battle(): #main function of code
 		text_rect.center = ((40), (20)) # positions the text
 		gameDisplay.blit(text_surf,text_rect) # prints text
 
-		text_surf, text_rect = text_object("Speed: " + str(((round(math.sqrt(player.velocity_x**2 + player.velocity_y**2)))*18)/5) + "km/h", large_text, black) # makes a speedometer
+		text_surf, text_rect = text_object("Speed: " + str((player.velocity*18)/5) + "km/h", large_text, black) # makes a speedometer
 		text_rect.center = ((40), (40)) # positions text
 		gameDisplay.blit(text_surf,text_rect) # prints text
 
 
-		player.move() # simulates one frame of movemnt
+		# player.move() # simulates one frame of movemnt
 		if player.y <= 0: # checks if sprite is too low
 			player.y = 0  # sets a floor
 		player.draw() # draws the plane
