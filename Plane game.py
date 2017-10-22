@@ -309,8 +309,6 @@ def battle():
 		text_rect.center = ((40), (40)) # positions text
 		gameDisplay.blit(text_surf,text_rect) # prints text
 
-
-		# player.move() # simulates one frame of movemnt
 		if play == True: #testing var
 			player.move() # simulates one frame of movemnt
 		if player.y <= 0: # checks if sprite is too low
