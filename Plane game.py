@@ -4,7 +4,7 @@ import time
 import random
 import math
 import sys
-import engine.py
+import engine
 
 
 # INITIALIZATION
@@ -90,7 +90,6 @@ def rot_center(image, rect, angle): # came from stack overflow
     rot_rect = rot_image.get_rect(center=rect.center)
     return rot_image,rot_rect
 
-<<<<<<< HEAD
 class plane(): # class of plane
 	def __init__ (self, sprite, x, y, attack_angle, ai):
 		self.sprite = sprite # sprite file goes here
@@ -168,9 +167,6 @@ class plane(): # class of plane
 			img, img_rect = rot_center(self.sprite, self.rect, self.attack_angle) # sets the rotation of sprite
 			gameDisplay.blit(img, (round(self.x), round(self.y))) # prints the sprite
 
-
-=======
->>>>>>> 7a32ae5014da7ef995e63901a8c2b0000476e017
 	def shoot(): # shoot function
 		pass
 
