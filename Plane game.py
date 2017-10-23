@@ -305,7 +305,7 @@ def battle():
 		text_rect.center = ((40), (20)) # positions the text
 		gameDisplay.blit(text_surf,text_rect) # prints text
 
-		text_surf, text_rect = text_object("Speed: " + str((player.velocity*18)/5) + "km/h", large_text, black) # makes a speedometer
+		text_surf, text_rect = text_object("Speed: " + str(round((player.velocity*18)/5)) + "km/h", large_text, black) # makes a speedometer
 		text_rect.center = ((40), (40)) # positions text
 		gameDisplay.blit(text_surf,text_rect) # prints text
 
