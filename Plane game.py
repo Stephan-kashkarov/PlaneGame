@@ -45,6 +45,8 @@ clock = pygame.time.Clock() # Fps Speed
 player_sprite = pygame.image.load("Planes/Player.png") # makes the player sprite
 player_sprite_alt = pygame.image.load("Planes/Player_alt.png") # an upsided down player sprite
 background = pygame.image.load("Planes/Background 1.png") # makes the background
+intromap = pygame.image.load("Planes/Airbase.png")
+playerhome = pygame.image.load("Planes/TPDWN.png")
 sprite_width = 10 # Width of sprite in pxls
 sprite_height = 12 # hight of the sprite in pxls
 
@@ -89,6 +91,29 @@ def rot_center(image, rect, angle): # came from stack overflow
     rot_image = pygame.transform.rotate(image, angle)
     rot_rect = rot_image.get_rect(center=rect.center)
     return rot_image,rot_rect
+
+class man():
+	def __init__ (self, sprite, x, y, rotation):
+		self.sprite = sprite
+		self.rect = sprite.get_rect()
+		self.x = x
+		self.y = y
+		self.rotation = rotation
+		self.rect = sprite.get_rect()
+
+	def move(self, mve):
+		# Directional movement
+		if mve == True:
+			self.x += math.cos(math.radians(self.rotation))
+			self.y += math.sin(math.radians(self.rotation))
+
+
+
+	def draw(self):
+		img, img_rect = rot_center(self.sprite, self.rect, self.rotation*-1)
+		gameDisplay.blit(img, (self.x,self.y))
+
+
 
 class plane(): # class of plane
 	def __init__ (self, sprite, x, y, attack_angle, ai):
@@ -170,6 +195,8 @@ class plane(): # class of plane
 	def shoot(): # shoot function
 		pass
 
+player = man(playerhome, 936, 330, 0)
+
 def intro(): # The intro to the game include the main menu
 
 	intro = True
@@ -192,6 +219,46 @@ def intro(): # The intro to the game include the main menu
 
 		pygame.display.update()
 		clock.tick(fps)
+
+def menu():
+	game_end = False
+	speed_change = 0
+	mve = False
+	rotation_change = 0
+	while not game_end:
+
+		# EVENT LOOP
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+					pygame.quit()
+					quit()
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_UP:
+						mve = True
+				elif event.key == pygame.K_DOWN:
+						speed_change = -1
+				if event.key == pygame.K_LEFT:
+					rotation_change = -10
+					if rotation_change >= 360:
+						rotation_change -= 360
+				elif event.key == pygame.K_RIGHT:
+					rotation_change = 10
+					if rotation_change >= 360:
+						rotation_change -= 360
+
+			elif event.type == pygame.KEYUP:
+				rotation_change = 0
+				mve = True
+
+
+		player.rotation += rotation_change
+		player.move(mve)
+		player.draw()
+		gameDisplay.blit(intromap,(0,0))
+		#DISPLAY UPDATE
+		pygame.display.update() # updates the display
+		clock.tick(fps) # sets fps
+
 
 def planes(): # manual screen
 	planes = True
@@ -319,9 +386,9 @@ def battle():
 		pygame.display.update() # updates the display
 		clock.tick(fps) # sets fps
 
-intro() # runs intro
-planes() # runs maual
-battle() # runs battle
-
+#intro() # runs intro
+#planes() # runs maual
+#battle() # runs battle
+menu()
 pygame.quit() # quits pygame
 quit() # exit
