@@ -236,7 +236,7 @@ def menu():
 				if event.key == pygame.K_UP:
 						mve = True
 				elif event.key == pygame.K_DOWN:
-						speed_change = -1
+						mve = True
 				if event.key == pygame.K_LEFT:
 					rotation_change = -10
 					if rotation_change >= 360:
@@ -252,9 +252,9 @@ def menu():
 
 
 		player.rotation += rotation_change
+		gameDisplay.blit(intromap,(0,0))
 		player.move(mve)
 		player.draw()
-		gameDisplay.blit(intromap,(0,0))
 		#DISPLAY UPDATE
 		pygame.display.update() # updates the display
 		clock.tick(fps) # sets fps
