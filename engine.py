@@ -6,6 +6,8 @@ import time
 import random
 import math
 import sys
+import functions
+import setup
 
 #GAME VARIABLES
 display_width = 1280 # Width of the pygame display
