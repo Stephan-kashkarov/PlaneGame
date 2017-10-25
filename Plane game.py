@@ -152,10 +152,11 @@ def menu():
 	speed_change = 0
 	mve = False
 	rotation_change = 0
-	mouse_pos = pygame.mouse.get_pos()
 	while not game_end:
 
 		# EVENT LOOP
+		mouse_pos = pygame.mouse.get_pos() # Get the mouse position
+		mouse_click = pygame.mouse.get_pressed() # Get the mouse button state
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 					pygame.quit()
@@ -165,21 +166,18 @@ def menu():
 						mve = True
 				elif event.key == pygame.K_DOWN:
 						mve = True
-				if event.key == pygame.K_LEFT:
-					rotation_change = -10
-					if rotation_change >= 360:
-						rotation_change -= 360
-				elif event.key == pygame.K_RIGHT:
-					rotation_change = 10
-					if rotation_change >= 360:
-						rotation_change -= 360
 
 			elif event.type == pygame.KEYUP:
 				rotation_change = 0
 				mve = False
+		run = mouse_pos[1]-player.y
+		rise = mouse_pos[0]-player.x
+		if rise == 0:
+			rise = 1
+		gradiant = (run)/(rise)
 
-
-		player.rotation += rotation_change
+		print(gradiant)
+		player.rotation = math.degrees(math.atan(gradiant))
 		setup.gameDisplay.blit(setup.intromap,(0,0))
 		if mve == True:
 			player.move()
