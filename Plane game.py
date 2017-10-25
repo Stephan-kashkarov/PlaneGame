@@ -101,11 +101,10 @@ class man():
 		self.rotation = rotation
 		self.rect = sprite.get_rect()
 
-	def move(self, mve):
-		# Directional movement
-		if mve == True:
-			self.x += math.cos(math.radians(self.rotation))
-			self.y += math.sin(math.radians(self.rotation))
+	def move(self):
+	# Directional movement
+		self.x += math.cos(math.radians(self.rotation))*10
+		self.y += math.sin(math.radians(self.rotation))*10
 
 
 
@@ -248,12 +247,13 @@ def menu():
 
 			elif event.type == pygame.KEYUP:
 				rotation_change = 0
-				mve = True
+				mve = False
 
 
 		player.rotation += rotation_change
 		gameDisplay.blit(intromap,(0,0))
-		player.move(mve)
+		if mve == True:
+			player.move()
 		player.draw()
 		#DISPLAY UPDATE
 		pygame.display.update() # updates the display
