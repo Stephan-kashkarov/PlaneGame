@@ -9,35 +9,6 @@ import sys
 import functions
 import setup
 
-#GAME VARIABLES
-display_width = 1280 # Width of the pygame display
-display_height = 720 # height of the pygame dispaly
-fps = 120 # Frames per second
-
-#PHYSICS VARIABLES
-gravity = 9800 # Gravity Coeficient
-drag_coef = 1 # Drag coeficient
-thrust_coef = 65536 # thrust coeficient
-
-#PYGAME WINDOW SETUP
-display_resolution = (display_width,display_height) # Overall resolution of display
-gameDisplay = pygame.display.set_mode(display_resolution) # makes the disp;ay windown
-pygame.display.set_caption("Plane tech demo") # sets a name for the display window
-clock = pygame.time.Clock() # Fps Speed
-
-#SPRITE DEF
-player_sprite = pygame.image.load("Planes/Player.png") # makes the player sprite
-player_sprite_alt = pygame.image.load("Planes/Player_alt.png") # an upsided down player sprite
-background = pygame.image.load("Planes/Background 1.png") # makes the background
-sprite_width = 10 # Width of sprite in pxls
-sprite_height = 12 # hight of the sprite in pxls
-
-def rot_center(image, rect, angle): # came from stack overflow
-    """rotate an image while keeping its center"""
-    rot_image = pygame.transform.rotate(image, angle)
-    rot_rect = rot_image.get_rect(center=rect.center)
-    return rot_image,rot_rect
-
 class plane(): # class of plane
 	def __init__ (self, sprite, x, y, attack_angle, ai):
 		self.sprite = sprite # sprite file goes here
