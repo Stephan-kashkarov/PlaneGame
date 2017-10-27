@@ -22,7 +22,6 @@ def button(msg, x, y, width, height, colour1, colour2, func = False): # button f
 		pygame.draw.rect(gameDisplay, colour2, (x,y,width,height)) # change button colour
 		if mouse_click[0] == 1 and func != None:
 			func() # runs fuction
-
 	else:
 		pygame.draw.rect(gameDisplay, colour1, (x,y,width,height)) # resting colour of button
 	smallText = pygame.font.Font("freesansbold.ttf", 40) # creates a font
@@ -40,3 +39,11 @@ def rot_center(image, rect, angle): # came from stack overflow
     rot_image = pygame.transform.rotate(image, angle)
     rot_rect = rot_image.get_rect(center=rect.center)
     return rot_image,rot_rect
+
+def collision(x, y, playerx, playery, width, height, playerwidth, playerheight):
+	for obj in range(x,width):
+		for itm in range(y, height):
+			if obj in range(playerx,playerwidth) and if itm in range(playery, playerheight):
+				return True
+	else:
+		return False
