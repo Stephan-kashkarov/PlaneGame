@@ -7,6 +7,8 @@ import sys
 from engine import *
 from setup import *
 from functions import *
+import pytmx
+
 
 #var
 kills = 0 # number of kills
