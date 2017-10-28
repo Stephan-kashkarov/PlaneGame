@@ -50,7 +50,7 @@ def intro(): # The intro to the game include the main menu
 		text_rect.center = ((display_width/2), (display_height/2))
 		gameDisplay.blit(text_surf,text_rect)
 
-		button("PLAY!", 200, 450, 200, 100, d_green, green, battle) # makes a play button
+		button("PLAY!", 200, 450, 200, 100, d_green, green, menu) # makes a play button
 		button("Planes", 540, 450, 200, 100, d_grey, grey,planes) # makes a manual button
 		button("QUIT!", 880, 450, 200, 100, d_red, red, leave) # makes a quit button
 
@@ -91,8 +91,20 @@ def menu():
 		setup.gameDisplay.blit(setup.intromap,(0,0))
 		if mve == True:
 			player.move()
-			planes
+			#x1, y1, x2, y2, playerx1, playery1, playerx2, playery2
+			settings = function.collision(76, 241, 339, 333, player.x, player.y, player.x + 63, player.y + 89)
+			briefing = function.collision(81, 364, 341, 456, player.x, player.y, player.x + 63, player.y + 89)
+			helps = function.collision(81, 480, 343, 570, player.x, player.y, player.x + 63, player.y + 89)
+			planes = function.collision(704, 253, 1019, 592, player.x, player.y, player.x + 63, player.y + 89)
 		player.draw()
+		if settings = True:
+			settings()
+		if briefing = True:
+			briefing()
+		if helps = True:
+			helps()
+		if planes = True:
+			planes()
 		#DISPLAY UPDATE
 		pygame.display.update() # updates the display
 		setup.clock.tick(setup.fps) # sets fps
@@ -117,31 +129,6 @@ def planes(): # manual screen
 
 		pygame.display.update()
 		clock.tick(fps)
-
-def travel():
-
-	game_end = False
-	while not game_end: # game loop
-		for event in pygame.event.get(): # check for input
-			if event.type == pygame.QUIT: # quit funct
-					pygame.quit()
-					quit()
-			if event.type == pygame.KEYDOWN: #if a key is pressed
-				if event.key == pygame.K_UP: # if that key is up
-					x_change = 2
-				elif event.key == pygame.K_DOWN: # if key is down
-					x_change = -2
-				if event.key == pygame.K_LEFT: # left key
-					y_change = 2
-				elif event.key == pygame.K_RIGHT:# Right key
-					y_change = -2
-			elif event.type == pygame.KEYUP: # if key stops being pressed
-				y_change = 0 # set change to 0
-				x_change = 0 # set change to 0
-
-		player.x += x_change # and the change to value
-		player.y += y_change # add the change to value
-
 
 def battle():
 	player = plane(player_sprite, 0, 720, 0, True) # make a object in class plane
@@ -224,7 +211,7 @@ def battle():
 		pygame.display.update() # updates the display
 		clock.tick(fps) # sets fps
 
-#intro() # runs intro
+intro() # runs intro
 #planes() # runs maual
 #battle() # runs battle
 menu()
