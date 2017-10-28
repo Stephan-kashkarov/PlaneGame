@@ -40,10 +40,10 @@ def rot_center(image, rect, angle): # came from stack overflow
     rot_rect = rot_image.get_rect(center=rect.center)
     return rot_image,rot_rect
 
-def collision(x, y, playerx, playery, width, height, playerwidth, playerheight):
-	for obj in range(x,width):
-		for itm in range(y, height):
-			if obj in range(playerx,playerwidth) and itm in range(playery, playerheight):
+def collision(x1, y1, x2, y2, playerx1, playery1, playerx2, playery2):
+	for obj in range(x1,x2):
+		for itm in range(y1, y2):
+			if obj in range(playerx1,playerx2) and itm in range(playery1, playery2):
 				return True
 	else:
 		return False
