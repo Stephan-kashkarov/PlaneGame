@@ -83,29 +83,35 @@ def menu():
 			elif event.type == pygame.KEYUP:
 				rotation_change = 0
 				mve = False
-		run = mouse_pos[1]-player.y
-		rise = mouse_pos[0]-player.x
-		if rise == 0:
-			rise = 1
-		gradiant = (run)/(rise)
+		run = mouse_pos[0]-player.x
+		rise = mouse_pos[1]-player.y
+		if run == 0:
+			run = 1
+		gradient = (rise)/(run)
 
-		print(gradiant)
-		player.rotation = math.degrees(math.atan(gradiant))
+		#print(gradient)
+		player.rotation = math.degrees(math.atan(gradient))
+		if run <= 0:
+			if rise > 0:
+				player.rotation = -180 + player.rotation
+			else:
+				player.rotation = 180 + player.rotation
+
 		gameDisplay.blit(intromap,(0,0))
 		if mve == True:
 			player.move()
 			#x1, y1, x2, y2, playerx1, playery1, playerx2, playery2
-			settings = collision(76, 241, 339, 333, player.x, player.y, player.x + 63, player.y + 89)
-			briefing = collision(81, 364, 341, 456, player.x, player.y, player.x + 63, player.y + 89)
-			helps = collision(81, 480, 343, 570, player.x, player.y, player.x + 63, player.y + 89)
-			planes = collision(704, 253, 1019, 592, player.x, player.y, player.x + 63, player.y + 89)
-			if settings == True:
+			settings_button = collision(76, 241, 339, 333, player.x, player.y, player.x + 63, player.y + 89)
+			briefing_button = collision(81, 364, 341, 456, player.x, player.y, player.x + 63, player.y + 89)
+			helps_button = collision(81, 480, 343, 570, player.x, player.y, player.x + 63, player.y + 89)
+			planes_button = collision(704, 253, 1019, 592, player.x, player.y, player.x + 63, player.y + 89)
+			if settings_button == True:
 				settings()
-			if briefing == True:
+			if briefing_button == True:
 				briefing()
-			if helps == True:
+			if helps_button == True:
 				helps()
-			if planes == True:
+			if planes_button == True:
 				planes()
 		player.draw()
 

@@ -42,11 +42,22 @@ def rot_center(image, rect, angle): # came from stack overflow
     return rot_image,rot_rect
 
 def collision(x1, y1, x2, y2, playerx1, playery1, playerx2, playery2):
-	for obj in range(x1,x2):
-		obj = int(obj)
-		for itm in range(y1, y2):
-			itm = int(itm)
-			if obj in int(range(playerx1,playerx2)) and itm in int(range(playery1, playery2)):
-				return True
-	else:
-		return False
+	if playerx1 >= x1 and playerx1 <= x2:
+		if playery1 >= y1 and playery1 <= y2:
+			return True
+		elif playery2 >= y1 and playery2 <=y2:
+			return True
+	elif playerx2 >= x1 and playerx2 <= x2:
+		if playery1 >= y1 and playery1 <= y2:
+			return True
+		elif playery2 >= y1 and playery2 <=y2:
+			return True
+	return False		
+	# for obj in range(x1,x2):
+	# 	# obj = int(obj)
+	# 	for itm in range(y1, y2):
+	# 		# itm = int(itm)
+	# 		if obj in int(range(playerx1,playerx2)) and itm in int(range(playery1, playery2)):
+	# 			return True
+	# else:
+	# 	return False
