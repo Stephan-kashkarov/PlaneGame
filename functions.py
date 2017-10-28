@@ -43,7 +43,7 @@ def rot_center(image, rect, angle): # came from stack overflow
 def collision(x, y, playerx, playery, width, height, playerwidth, playerheight):
 	for obj in range(x,width):
 		for itm in range(y, height):
-			if obj in range(playerx,playerwidth) and if itm in range(playery, playerheight):
+			if obj in range(playerx,playerwidth) and itm in range(playery, playerheight):
 				return True
 	else:
 		return False

@@ -91,6 +91,7 @@ def menu():
 		setup.gameDisplay.blit(setup.intromap,(0,0))
 		if mve == True:
 			player.move()
+			planes
 		player.draw()
 		#DISPLAY UPDATE
 		pygame.display.update() # updates the display
