@@ -32,7 +32,7 @@ class man():
 		img, img_rect = rot_center(self.sprite, self.rect, self.rotation*-1)
 		gameDisplay.blit(img, (self.x,self.y))
 
-player = man(playerhome, 936, 330, 0)
+player = man(playerhome, 0, 0, 0)
 
 def intro(): # The intro to the game include the main menu
 
@@ -51,11 +51,14 @@ def intro(): # The intro to the game include the main menu
 		gameDisplay.blit(text_surf,text_rect)
 
 		button("PLAY!", 200, 450, 200, 100, d_green, green, menu) # makes a play button
-		button("Planes", 540, 450, 200, 100, d_grey, grey,planes) # makes a manual button
+		button("TUTORIAL!", 540, 450, 200, 100, d_grey, grey,tutorial) # makes a manual button
 		button("QUIT!", 880, 450, 200, 100, d_red, red, leave) # makes a quit button
 
 		pygame.display.update()
 		clock.tick(fps)
+
+def tutorial():
+	pass
 
 def menu():
 	game_end = False
