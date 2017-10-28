@@ -4,6 +4,7 @@ import pygame
 import time
 import random
 import math
+from setup import *
 
 def leave(): # Quit function
 	pygame.quit() # pygame de initialize
@@ -42,8 +43,10 @@ def rot_center(image, rect, angle): # came from stack overflow
 
 def collision(x1, y1, x2, y2, playerx1, playery1, playerx2, playery2):
 	for obj in range(x1,x2):
+		obj = int(obj)
 		for itm in range(y1, y2):
-			if obj in range(playerx1,playerx2) and itm in range(playery1, playery2):
+			itm = int(itm)
+			if obj in int(range(playerx1,playerx2)) and itm in int(range(playery1, playery2)):
 				return True
 	else:
 		return False

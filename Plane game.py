@@ -5,8 +5,8 @@ import random
 import math
 import sys
 from engine import *
-import setup
-import functions
+from setup import *
+from functions import *
 
 #var
 kills = 0 # number of kills
@@ -29,10 +29,10 @@ class man():
 
 
 	def draw(self):
-		img, img_rect = functions.rot_center(self.sprite, self.rect, self.rotation*-1)
-		setup.gameDisplay.blit(img, (self.x,self.y))
+		img, img_rect = rot_center(self.sprite, self.rect, self.rotation*-1)
+		gameDisplay.blit(img, (self.x,self.y))
 
-player = man(setup.playerhome, 936, 330, 0)
+player = man(playerhome, 936, 330, 0)
 
 def intro(): # The intro to the game include the main menu
 
@@ -88,26 +88,27 @@ def menu():
 
 		print(gradiant)
 		player.rotation = math.degrees(math.atan(gradiant))
-		setup.gameDisplay.blit(setup.intromap,(0,0))
+		gameDisplay.blit(intromap,(0,0))
 		if mve == True:
 			player.move()
 			#x1, y1, x2, y2, playerx1, playery1, playerx2, playery2
-			settings = function.collision(76, 241, 339, 333, player.x, player.y, player.x + 63, player.y + 89)
-			briefing = function.collision(81, 364, 341, 456, player.x, player.y, player.x + 63, player.y + 89)
-			helps = function.collision(81, 480, 343, 570, player.x, player.y, player.x + 63, player.y + 89)
-			planes = function.collision(704, 253, 1019, 592, player.x, player.y, player.x + 63, player.y + 89)
+			settings = collision(76, 241, 339, 333, player.x, player.y, player.x + 63, player.y + 89)
+			briefing = collision(81, 364, 341, 456, player.x, player.y, player.x + 63, player.y + 89)
+			helps = collision(81, 480, 343, 570, player.x, player.y, player.x + 63, player.y + 89)
+			planes = collision(704, 253, 1019, 592, player.x, player.y, player.x + 63, player.y + 89)
+			if settings == True:
+				settings()
+			if briefing == True:
+				briefing()
+			if helps == True:
+				helps()
+			if planes == True:
+				planes()
 		player.draw()
-		if settings = True:
-			settings()
-		if briefing = True:
-			briefing()
-		if helps = True:
-			helps()
-		if planes = True:
-			planes()
+
 		#DISPLAY UPDATE
 		pygame.display.update() # updates the display
-		setup.clock.tick(setup.fps) # sets fps
+		clock.tick(fps) # sets fps
 
 
 def planes(): # manual screen
