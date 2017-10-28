@@ -8,6 +8,7 @@ from engine import *
 from setup import *
 from functions import *
 import pytmx
+from map import *
 
 
 #var

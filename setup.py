@@ -3,8 +3,8 @@ import pygame
 import time
 import random
 import math
-import pytmx
-tiled_map = pytmx.TiledMap('map.tmx')
+import pytmx 				
+
 # INITIALIZATION
 pygame.init()
 #GAME VARIABLES
