@@ -142,6 +142,11 @@ def planes(): # manual screen
 		pygame.display.update()
 		clock.tick(fps)
 
+def game():
+	gamemap = main_map(map/Eastern front.tmx)
+	gamemap.map_img = gamemap.make_map()
+	gamemap.map_rect = gamemap.map_img.get.rect()
+
 def battle():
 	player = plane(player_sprite, 0, 720, 0, True) # make a object in class plane
 	attack_angle_change = 0 # set a variable to add to attack angel near the end of loop

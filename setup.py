@@ -42,3 +42,4 @@ player_sprite_alt = pygame.image.load("Planes/Player_alt.png") # an upsided down
 background = pygame.image.load("Planes/Background 1.png") # makes the background
 intromap = pygame.image.load("Planes/Airbase.png")
 playerhome = pygame.image.load("Planes/TPDWN.png")
+
