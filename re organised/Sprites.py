@@ -12,7 +12,13 @@ class man:
 	def move(self):
 		pass
 
+	def events(self):
+		keys = pg.get_keys()
+
+		if keys[1]
+
 	def run(self):
+		self.events()
 		self.move()
 		self.draw()
 

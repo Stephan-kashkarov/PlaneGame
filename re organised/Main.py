@@ -18,7 +18,9 @@ class game():
 		self.load_data()
 
 	def load_data(self):
-		pass
+		self.player_img = pg.image.load(path.join(img_folder, TPDWN)).convert_alpha()
+		self.plane_img = pg.imag.load(path.join(img_folder, Player)).convert_alpha()
+		self.alt_plane_img = pg.imag.load(path.join(img_folder, Player_alt)).convert_alpha()
 
 	def intro(self):
 		pass
