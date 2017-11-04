@@ -3,6 +3,7 @@ from sprites import *
 from settings import *
 from game_map import *
 from sys import *
+from functions import *
 
 class game():
 	"""docstring for screen"""
@@ -51,6 +52,9 @@ class game():
 		self.full_logo = pg.image.load("img/full_logo.png")
 		self.logo = pg.image.load("img/logo.png")
 
+		#sprite load
+		battle_plane = plane(display_width/2, display_height/2, self.plane_img)
+
 	def tutorial(self):
 		pass
 
@@ -64,8 +68,11 @@ class game():
 				intro = False
 			pg.display.flip()
 			self.clock.tick(fps)
+		self.menu()
 
 	def menu(self):
+		self.screen.fill(black)
+		pg.display.update()
 		self.screen.blit(self.logo,(display_width/2, display_height/2))
 		menu = True
 		while menu:
@@ -77,22 +84,33 @@ class game():
 			pg.display.update()
 			self.clock.tick(fps)
 
-
 	def hq(self):
 		self.screen.fill(black)
-		pg.draw.rect(0, 0, 1280, 50)
+		pg.draw.rect(self.screen, d_grey, (0, 0, 1280, 50))
+		pg.draw.rect(self.screen, d_grey, (0, 500, 800, 220))
+		pg.draw.rect(self.screen, d_grey, (1000, 500, 280, 220))
+		pg.draw.rect(self.screen, black, (1030, 530, 230, 180))
+		buttons = True
+		while buttons:
+			self.button("Back!", 30, 530, 200, 180, red, d_red, self.menu)
+			self.button("Upgrade!", 260, 530, 200, 180, grey, dd_grey)
+			self.button("GO!", 490, 530, 200, 180, green, d_green, self.patrol)
+			self.events()
+			pg.display.flip()
+			self.clock.tick(fps)
+
+
 	def patrol(self):
 		pass
 
 	def battle(self):
+		battle_plane.run()
+
+	def test(self):
 		pass
 
-
-
 instance = game(display_height, display_width, fps)
-#instance.intro()
-#instance.menu()
-instance.hq()
+instance.intro()
 #while instance:
 #	instance.hq()
 #	instance.patrol()
