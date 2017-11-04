@@ -2,35 +2,85 @@ import pygame as pg
 from sprites import *
 from settings import *
 from game_map import *
+from sys import *
 
 class game():
 	"""docstring for screen"""
 	def __init__(self, display_height, display_width, fps):
 		pg.init()
 		pg.mixer.init()
-		self.display_height = display_height
-		self.display_width = display_width
+		self.height = display_height
+		self.width = display_width
 		self.fps = fps
-		self.screen = pg.display.set_mode((width,height))
+		self.screen = pg.display.set_mode((self.width, self.height))
 		pg.display.set_caption(title)
 		self.clock = pg.time.Clock()
 		pg.key.set_repeat(100, 50)
 		self.load_data()
 
+	def button(self, msg, x, y, width, height, colour1, colour2, func = False): # button function
+		mouse_pos = pg.mouse.get_pos() # Get the mouse position
+		mouse_click = pg.mouse.get_pressed() # Get the mouse button state
+		#print(mouse_pos)
+		pg.draw.rect(self.screen, colour1, (x,y,width,height)) # render button
+		if x + width > mouse_pos[0] > x and y + height > mouse_pos[1] > y: # check if mouse is over button
+			pg.draw.rect(self.screen, colour2, (x,y,width,height)) # change button colour
+			if mouse_click[0] == 1 and func != None:
+				func() # runs fuction
+		else:
+			pg.draw.rect(self.screen, colour1, (x,y,width,height)) # resting colour of button
+		smallText = pg.font.Font("freesansbold.ttf", 40) # creates a font
+		text_surf,text_rect = text_object(msg, smallText, black) #renders that font
+		text_rect.center = ( (x+(width/2)), (y+(height/2)) ) # positions that font
+		self.screen.blit(text_surf, text_rect) # print button
+
+
+	def events(self):
+		for event in pg.event.get():
+			if event.type == pg.QUIT:
+				self.quits()
+			if event.type == pg.KEYDOWN:
+				if event.key == pg.K_ESCAPE:
+					pg.quit()
+					quit()
+
 	def load_data(self):
-		self.player_img = pg.image.load(path.join(img_folder, TPDWN)).convert_alpha()
-		self.plane_img = pg.imag.load(path.join(img_folder, Player)).convert_alpha()
-		self.alt_plane_img = pg.imag.load(path.join(img_folder, Player_alt)).convert_alpha()
+		self.player_img = pg.image.load("img/TPDWN.png")
+		self.plane_img = pg.image.load("img/Player.png")
+		self.alt_plane_img = pg.image.load("img/player_alt.png")
+		self.full_logo = pg.image.load("img/full_logo.png")
+		self.logo = pg.image.load("img/logo.png")
+
+	def tutorial(self):
+		pass
 
 	def intro(self):
-		pass
+		self.screen.blit(self.full_logo, (0,0))
+		intro = True
+		while intro:
+			self.events()
+			click = pg.mouse.get_pressed() # Get the mouse button state
+			if click[0] == 1:
+				intro = False
+			pg.display.flip()
+			self.clock.tick(fps)
 
 	def menu(self):
-		pass
+		self.screen.blit(self.logo,(display_width/2, display_height/2))
+		menu = True
+		while menu:
+			self.events()
+			self.button("PLAY!", 200, 450, 200, 100, d_green, green, self.hq) # makes a play button
+			self.button("TUTORIAL!", 540, 450, 200, 100, d_grey, grey, self.tutorial) # makes a manual button
+			self.button("QUIT!", 880, 450, 200, 100, d_red, red, quits) # makes a quit button
+
+			pg.display.update()
+			self.clock.tick(fps)
+
 
 	def hq(self):
-		pass
-
+		self.screen.fill(black)
+		pg.draw.rect(0, 0, 1280, 50)
 	def patrol(self):
 		pass
 
@@ -39,13 +89,13 @@ class game():
 
 
 
-
-
-#game.intro()
-#game.menu()
-#while game:
-#	game.hq()
-#	game.patrol()
-#		game.battle()
-#game.boss()
+instance = game(display_height, display_width, fps)
+#instance.intro()
+#instance.menu()
+instance.hq()
+#while instance:
+#	instance.hq()
+#	instance.patrol()
+#		instance.battle()
+#instance.boss()
 #quit()
