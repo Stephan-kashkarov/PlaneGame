@@ -1,5 +1,7 @@
+Kp = 0.004
+
 class man:
-	def __init__(self, x, y, sprite):
+	def __init__(self, x, y, sprite, fps):
 		self.x = x
 		self.y = y
 		self.rot = 0
@@ -37,17 +39,16 @@ class man:
 
 class plane:
 	def __init__(self, x, y, sprite):
-		self.x = x
-		self.y = y
-		self.rot = 0
-		self.speed = PLANESPEED
+		self.pos = [x,y]
 		self.sprite = sprite
 
 	def draw(self):
 		pass
 
 	def move(self):
-		pass
+		mouse_pos = pg.mouse.get_pos();
+		for i in range(0,1):
+			pos[i] += Kp*(mouse_pos[i] - pos[i])
 
 	def shoot(self):
 		pass
