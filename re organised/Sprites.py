@@ -13,9 +13,22 @@ class man:
 		pass
 
 	def events(self):
-		keys = pg.get_keys()
+		self.vx, self.vy = 0, 0
+		keys = pg.key.get_pressed()
 
-		if keys[1]
+
+		if keys[pg.K_LEFT] or keys[pg.K_a]:
+			self.vel.x = -player_speed
+		elif keys[pg.K_RIGHT] or keys[pg.K_d]:
+			self.vel.x = player_speed
+		if keys[pg.K_UP] or keys[pg.K_w]:
+			self.vel.y = -player_speed
+		elif keys[pg.K_DOWN] or keys[pg.K_s]:
+			self.vel.y = player_speed
+
+		if self.vel.x != 0 and self.vel.y !=0:
+			self.vel *= 0.7071
+
 
 	def run(self):
 		self.events()
