@@ -40,7 +40,7 @@ class plane:
 		self.x = x
 		self.y = y
 		self.rot = 0
-		self.speed = PLANESPEED
+		self.speed = 0
 		self.sprite = sprite
 
 	def draw(self):
