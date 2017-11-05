@@ -1,3 +1,5 @@
+import pygame as pg
+
 Kp = 0.004
 
 class man:
@@ -38,17 +40,18 @@ class man:
 		self.draw()
 
 class plane:
-	def __init__(self, x, y, sprite):
+	def __init__(self, screen, x, y, sprite):
 		self.pos = [x,y]
 		self.sprite = sprite
+		self.screen = screen
 
 	def draw(self):
-		pass
+		self.screen.blit(self.sprite, (self.pos[0], self.pos[1]))
 
 	def move(self):
 		mouse_pos = pg.mouse.get_pos();
 		for i in range(0,1):
-			pos[i] += Kp*(mouse_pos[i] - pos[i])
+			self.pos[i] += Kp*(mouse_pos[i] - self.pos[i])
 
 	def shoot(self):
 		pass

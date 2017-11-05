@@ -1,5 +1,5 @@
 import pygame as pg
-from sprites import *
+from Sprites import *
 from settings import *
 from game_map import *
 from sys import *
@@ -39,7 +39,8 @@ class game():
 	def events(self):
 		for event in pg.event.get():
 			if event.type == pg.QUIT:
-				self.quits()
+				pg.quit()
+				quit()
 			if event.type == pg.KEYDOWN:
 				if event.key == pg.K_ESCAPE:
 					pg.quit()
@@ -53,7 +54,7 @@ class game():
 		self.logo = pg.image.load("img/logo.png")
 
 		#sprite load
-		battle_plane = plane(display_width/2, display_height/2, self.plane_img)
+		battle_plane = plane(self.screen, display_width/2, display_height/2, self.plane_img)
 
 	def tutorial(self):
 		pass
@@ -107,10 +108,20 @@ class game():
 		battle_plane.run()
 
 	def test(self):
-		pass
+		battle_plane = plane(self.screen, display_width/2, display_height/2, self.player_img)
+		self.screen.fill(black)
+		test = True
+		while test:
+			self.events()
+			battle_plane.run()
+			pg.display.flip()
+			self.clock.tick()
+
+
 
 instance = game(display_height, display_width, fps)
-instance.intro()
+#instance.intro()
+instance.test()
 #while instance:
 #	instance.hq()
 #	instance.patrol()
