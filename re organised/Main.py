@@ -1,6 +1,6 @@
 import pygame as pg
 from Sprites import *
-from settings import *
+from Settings import *
 from game_map import *
 from sys import *
 from functions import *
