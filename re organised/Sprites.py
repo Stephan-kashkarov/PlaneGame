@@ -3,11 +3,22 @@ import math
 
 Kp = 0.004
 
-class man:
-	def __init__(self, x, y, sprite, fps):
+class map_plane:
+	def __init__(self, x, y, sprite, fps, era):
 		self.pos = [x, y]
 		self.speed = [0, 0]
-		self.sprite = sprite
+		self.rot = 0
+		self.era = era
+		if self.era == 0:
+			self.speed = PLAYERSPEED_1
+			self.sprite = sprite[1]
+		if self.era == 1:
+			self.speed = PLAYERSPEED_2
+			self.sprite = sprite[2]
+		if self.era == 2:
+			self.speed = PLAYERSPEED_3
+			self.sprite = sprite[3]
+		self.alt = 0
 
 	def draw(self):
 		pass
@@ -38,7 +49,7 @@ class man:
 		self.move()
 		self.draw()
 
-class plane:
+class battle_plane:
 	def __init__(self, screen, x, y, sprite):
 		self.pos = [x,y]
 		self.rot = 0

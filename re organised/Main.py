@@ -18,6 +18,7 @@ class game():
 		self.clock = pg.time.Clock()
 		pg.key.set_repeat(100, 50)
 		self.load_data()
+		self.era = 0
 
 	def button(self, msg, x, y, width, height, colour1, colour2, func = False): # button function
 		mouse_pos = pg.mouse.get_pos() # Get the mouse position
@@ -47,14 +48,17 @@ class game():
 					quit()
 
 	def load_data(self):
+		self.biplane = pg.image.load("img/PLANE 2 N.png")
+		self.monoplane = pg.image.load("img/PLANE 1 N.png")
+		self.jetplane = pg.image.load("img/yak.png")
 		self.player_img = pg.image.load("img/TPDWN.png")
 		self.plane_img = pg.image.load("img/Player.png")
 		self.alt_plane_img = pg.image.load("img/player_alt.png")
 		self.full_logo = pg.image.load("img/full_logo.png")
 		self.logo = pg.image.load("img/logo.png")
+		self.map_group = [self.biplane, self.monoplane, self.jetplane]
 
 		#sprite load
-		battle_plane = plane(self.screen, display_width/2, display_height/2, self.plane_img)
 
 	def tutorial(self):
 		pass
@@ -69,7 +73,6 @@ class game():
 				intro = False
 			pg.display.flip()
 			self.clock.tick(fps)
-		self.menu()
 
 	def menu(self):
 		self.screen.fill(black)
@@ -102,20 +105,20 @@ class game():
 
 
 	def patrol(self):
-		pass
+		player = map_plane()
 
 	def battle(self):
 		battle_plane.run()
 
 	def test(self):
-		battle_plane = plane(self.screen, display_width/2, display_height/2, self.player_img)
+		plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
 		self.screen.fill(black)
 		test = True
 		while test:
 			self.screen.fill(black)
 			self.events()
-			battle_plane.run()
-			pg.display.update()
+			plane.run()
+			pg.display.flip()
 			self.clock.tick()
 
 

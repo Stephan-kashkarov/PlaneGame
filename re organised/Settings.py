@@ -1,6 +1,7 @@
 #PLAYER STATS
-PLAYERSPEED = 100
-
+PLAYERSPEED_1 = 100
+PLAYERSPEED_2 = 150
+PLAYERSPEED_3 = 200
 #COLOURS
 black = (0,0,0) # the Black colour in RBG
 grey = (100,100,100) # the Grey colour in RBG
