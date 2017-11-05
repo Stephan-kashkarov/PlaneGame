@@ -115,6 +115,7 @@ class game():
 		self.screen.fill(black)
 		test = True
 		while test:
+			self.screen.fill(black)
 			self.events()
 			plane.run()
 			pg.display.flip()
