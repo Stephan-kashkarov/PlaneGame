@@ -50,7 +50,7 @@ class plane:
 
 	def move(self):
 		mouse_pos = pg.mouse.get_pos();
-		for i in range(0,1):
+		for i in range(0,2):
 			self.pos[i] += Kp*(mouse_pos[i] - self.pos[i])
 
 	def shoot(self):
