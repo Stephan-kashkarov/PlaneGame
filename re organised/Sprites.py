@@ -2,6 +2,33 @@ import pygame as pg
 
 Kp = 0.004
 
+class test:
+	def __init__(self, x, y, screen):
+		self.x = x
+		self.y = y
+		self.img = pg.draw.rect(self.screen, d_grey, (x, y, 10, 10))
+		self.rect = img.get_rect()
+		self.screen = screen
+
+	def move(self):
+		keys = pg.get_pressed()
+
+		if keys[pg.K_LEFT] or keys[pg.K_a]:
+			self.x -= 10
+		elif keys[pg.K_RIGHT] or keys[pg.K_d]:
+			self.x += 10
+		if keys[pg.K_UP] or keys[pg.K_w]:
+			self.y -= 10
+		elif keys[pg.K_DOWN] or keys[pg.K_s]:
+			self.y += 10
+
+	def draw(self):
+		self.screen.blit(self.img, (x,y))
+
+	def run(self):
+		self.move()
+		self.draw()
+
 class map_plane:
 	def __init__(self, x, y, sprite, fps, era):
 		self.x = x
@@ -17,13 +44,18 @@ class map_plane:
 		if self.era == 2:
 			self.speed = PLAYERSPEED_3
 			self.sprite = sprite[3]
+		self.rect = self.sprite.get_rect()
 		self.alt = 0
 
 	def draw(self):
-		pass
+		self.rect = self.sprite.get_rect()
+		rot_sprite = rot_center(self.sprite, self.rect, self.rot)
+		self.screen.blit(self.sprite, (x,y))
 
 	def move(self):
-		pass
+		mouse = pg.mouse.get_pos()
+
+
 
 	def events(self):
 		self.vx, self.vy = 0, 0
