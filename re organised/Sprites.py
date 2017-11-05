@@ -1,13 +1,12 @@
 import pygame as pg
+import math
 
 Kp = 0.004
 
 class man:
 	def __init__(self, x, y, sprite, fps):
-		self.x = x
-		self.y = y
-		self.rot = 0
-		self.speed = PLAYERSPEED
+		self.pos = [x, y]
+		self.speed = [0, 0]
 		self.sprite = sprite
 
 	def draw(self):
@@ -42,16 +41,34 @@ class man:
 class plane:
 	def __init__(self, screen, x, y, sprite):
 		self.pos = [x,y]
+		self.rot = 0
 		self.sprite = sprite
 		self.screen = screen
 
 	def draw(self):
-		self.screen.blit(self.sprite, (self.pos[0], self.pos[1]))
+		img = pg.transform.rotate(self.sprite, -self.rot)
+		self.screen.blit(img, (self.pos[0], self.pos[1]))
 
 	def move(self):
 		mouse_pos = pg.mouse.get_pos();
+		# Plane rotation
+		run = mouse_pos[0]-self.pos[0]
+		rise = mouse_pos[1]-self.pos[1]
+		if run == 0:
+			run = 1
+		gradient = rise/run
+
+		#print(gradient)
+		self.rot = math.degrees(math.atan(gradient))
+		if run <= 0:
+			if rise > 0:
+				self.rot = -180 + self.rot
+			else:
+				self.rot = 180 + self.rot
+
+		# New plane position
 		for i in range(0,2):
-			self.pos[i] += Kp*(mouse_pos[i] - self.pos[i])
+		 	self.pos[i] += Kp*(mouse_pos[i] - self.pos[i])
 
 	def shoot(self):
 		pass

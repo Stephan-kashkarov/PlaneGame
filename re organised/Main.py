@@ -112,9 +112,10 @@ class game():
 		self.screen.fill(black)
 		test = True
 		while test:
+			self.screen.fill(black)
 			self.events()
 			battle_plane.run()
-			pg.display.flip()
+			pg.display.update()
 			self.clock.tick()
 
 
