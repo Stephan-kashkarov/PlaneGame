@@ -1,6 +1,6 @@
 import pygame as pg
 from Sprites import *
-from Settings import *
+from settings import *
 from game_map import *
 from sys import *
 from functions import *
@@ -17,8 +17,9 @@ class game():
 		pg.display.set_caption(title)
 		self.clock = pg.time.Clock()
 		pg.key.set_repeat(100, 50)
-		self.load_data()
 		self.era = 0
+		self.load_data()
+
 
 	def button(self, msg, x, y, width, height, colour1, colour2, func = False): # button function
 		mouse_pos = pg.mouse.get_pos() # Get the mouse position
@@ -59,6 +60,8 @@ class game():
 		self.map_group = [self.biplane, self.monoplane, self.jetplane]
 
 		#sprite load
+		plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
+		player = map_plane(200, 200, self.map_group, self.era)
 
 	def tutorial(self):
 		pass
@@ -97,7 +100,7 @@ class game():
 		buttons = True
 		while buttons:
 			self.button("Back!", 30, 530, 200, 180, red, d_red, self.menu)
-			self.button("Upgrade!", 260, 530, 200, 180, grey, dd_grey)
+			self.button("Upgrade!", 260, 530, 200, 180, grey, dd_grey, self.upgrade)
 			self.button("GO!", 490, 530, 200, 180, green, d_green, self.patrol)
 			self.events()
 			pg.display.flip()
@@ -105,13 +108,20 @@ class game():
 
 
 	def patrol(self):
-		player = map_plane()
+		while patroling:
+			player.run()
+			collision = plane.col()
+			if collision != False:
+				if collision == tank:
+					self.battle(tank)
 
-	def battle(self):
-		battle_plane.run()
+
+
+	def battle(self, type):
+		pass
 
 	def test(self):
-		plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
+
 		self.screen.fill(black)
 		test = True
 		while test:
@@ -121,10 +131,15 @@ class game():
 			pg.display.flip()
 			self.clock.tick()
 
+	def upgrade(self):
+		plane.upgrade()
+		player.upgrade()
+
 
 
 instance = game(display_height, display_width, fps)
 #instance.intro()
+#instance.menu()
 instance.test()
 #while instance:
 #	instance.hq()

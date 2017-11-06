@@ -1,5 +1,6 @@
 import pygame as pg
 import math
+from settings import *
 
 Kp = 0.004
 
@@ -31,7 +32,7 @@ class test:
 		self.draw()
 
 class map_plane:
-	def __init__(self, x, y, sprite, fps, era):
+	def __init__(self, x, y, sprite, era):
 		self.pos = [x, y]
 		self.speed = [0, 0]
 		self.rot = 0
@@ -55,6 +56,25 @@ class map_plane:
 
 	def move(self):
 		mouse = pg.mouse.get_pos()
+
+		# Plane rotation
+		run = mouse_pos[0]-self.pos[0]
+		rise = mouse_pos[1]-self.pos[1]
+		if run == 0:
+			run = 1
+		gradient = rise/run
+
+		#print(gradient)
+		self.rot = math.degrees(math.atan(gradient))
+		if run <= 0:
+			if rise > 0:
+				self.rot = -180 + self.rot
+			else:
+				self.rot = 180 + self.rot
+
+		# New plane position
+		for i in range(0,2):
+		 	self.pos[i] += Kp*(mouse_pos[i] - self.pos[i])
 
 
 
@@ -80,6 +100,10 @@ class map_plane:
 		self.events()
 		self.move()
 		self.draw()
+
+	def upgrade(self):
+		if self.era < 3:
+			self.era += 1
 
 class battle_plane:
 	def __init__(self, screen, x, y, sprite):
@@ -119,3 +143,8 @@ class battle_plane:
 	def run(self):
 		self.move()
 		self.draw()
+
+	def upgrade(self):
+		if self.era < 3:
+			self.era += 1
+
