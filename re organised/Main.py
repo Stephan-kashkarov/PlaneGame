@@ -59,6 +59,11 @@ class game():
 		self.logo = pg.image.load("img/logo.png")
 		self.map_group = [self.biplane, self.monoplane, self.jetplane]
 
+		#map load
+		self.map = TiledMap("img/Eastern_Front.tmx")
+		self.map_img = self.map_make()
+		self.map_rect = self.map_img.get_rect()
+
 		#sprite load
 		plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
 		player = map_plane(200, 200, self.map_group, self.era)
@@ -108,7 +113,9 @@ class game():
 
 
 	def patrol(self):
+		patroling = True
 		while patroling:
+			self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
 			player.run()
 			collision = plane.col()
 			if collision != False:
