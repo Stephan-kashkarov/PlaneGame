@@ -61,12 +61,12 @@ class game():
 
 		#map load
 		self.map = TiledMap("img/Eastern_Front.tmx")
-		self.map_img = self.map_make()
+		self.map_img = self.map.make_map()
 		self.map_rect = self.map_img.get_rect()
 
 		#sprite load
-		plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
-		player = map_plane(200, 200, self.map_group, self.era)
+		self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
+		self.player = map_plane(200, 200, self.map_group, self.era)
 
 	def tutorial(self):
 		pass
@@ -113,11 +113,12 @@ class game():
 
 
 	def patrol(self):
+		self.camera = Camera(self.map.width, self.map.height)
 		patroling = True
 		while patroling:
 			self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
-			player.run()
-			collision = plane.col()
+			self.player.run()
+			collision = self.player.col()
 			if collision != False:
 				if collision == tank:
 					self.battle(tank)
@@ -128,7 +129,7 @@ class game():
 		pass
 
 	def test(self):
-
+		plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
 		self.screen.fill(black)
 		test = True
 		while test:
@@ -145,9 +146,9 @@ class game():
 
 
 instance = game(display_height, display_width, fps)
-#instance.intro()
-#instance.menu()
-instance.test()
+instance.intro()
+instance.menu()
+#instance.test()
 #while instance:
 #	instance.hq()
 #	instance.patrol()
