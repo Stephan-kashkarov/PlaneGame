@@ -66,7 +66,7 @@ class game():
 
 		#sprite load
 		self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
-		self.player = map_plane(200, 200, self.map_group, self.era)
+		self.player = map_plane(200, 200, self.map_group, self.era, self.screen)
 
 	def tutorial(self):
 		pass
@@ -115,13 +115,18 @@ class game():
 	def patrol(self):
 		self.camera = Camera(self.map.width, self.map.height)
 		patroling = True
+		self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
+		self.camera.apply(self.plane)
+		self.camera.apply_rect(self.plane.rect)
 		while patroling:
-			self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
+			self.camera.update()
 			self.player.run()
-			collision = self.player.col()
-			if collision != False:
-				if collision == tank:
-					self.battle(tank)
+			self.events()
+			pg.display.update()
+			# collision = self.player.col()
+			# if collision != False:
+			# 	if collision == tank:
+			# 		self.battle(tank)
 
 
 
@@ -140,9 +145,9 @@ class game():
 			self.clock.tick()
 
 	def upgrade(self):
-		plane.upgrade()
-		player.upgrade()
-
+		# plane.upgrade()
+		# player.upgrade()
+		pass
 
 
 instance = game(display_height, display_width, fps)

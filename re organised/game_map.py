@@ -57,4 +57,5 @@ class Camera:
         y = min(0, y)  # top
         x = max(-(self.width - WIDTH), x)  # right
         y = max(-(self.height - HEIGHT), y)  # bottom
+        print("x,y: ", x, y)
         self.camera = pg.Rect(x, y, self.width, self.height)
