@@ -119,7 +119,7 @@ class game():
 		self.camera.apply(self.plane)
 		self.camera.apply_rect(self.plane.rect)
 		while patroling:
-			self.camera.update()
+			self.camera.update(self.player)
 			self.player.run()
 			self.events()
 			pg.display.update()

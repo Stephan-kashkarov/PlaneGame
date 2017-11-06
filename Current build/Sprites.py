@@ -92,6 +92,7 @@ class battle_plane:
 		self.pos = [x,y]
 		self.rot = 0
 		self.sprite = sprite
+		self.rect = self.sprite.get_rect()
 		self.screen = screen
 
 	def draw(self):
