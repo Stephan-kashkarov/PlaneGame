@@ -1,6 +1,7 @@
 import pygame as pg
 import math
 from settings import *
+import functions
 
 Kp = 0.004
 
@@ -32,11 +33,12 @@ class test:
 		self.draw()
 
 class map_plane:
-	def __init__(self, x, y, sprite, era):
+	def __init__(self, x, y, sprite, era, screen):
 		self.pos = [x, y]
 		self.speed = [0, 0]
 		self.rot = 0
 		self.era = era
+
 		if self.era == 0:
 			self.speed = PLAYERSPEED_1
 			self.sprite = sprite[1]
@@ -48,14 +50,15 @@ class map_plane:
 			self.sprite = sprite[3]
 		self.rect = self.sprite.get_rect()
 		self.alt = 0
+		self.screen = screen
 
 	def draw(self):
 		self.rect = self.sprite.get_rect()
-		rot_sprite = rot_center(self.sprite, self.rect, self.rot)
-		self.screen.blit(self.sprite, (x,y))
+		rot_sprite = functions.rot_center(self.sprite, self.rect, self.rot)
+		self.screen.blit(self.sprite, (self.pos[0], self.pos[1]))
 
 	def move(self):
-		mouse = pg.mouse.get_pos()
+		mouse_pos = pg.mouse.get_pos()
 
 		# Plane rotation
 		run = mouse_pos[0]-self.pos[0]
@@ -76,28 +79,7 @@ class map_plane:
 		for i in range(0,2):
 		 	self.pos[i] += Kp*(mouse_pos[i] - self.pos[i])
 
-
-
-	def events(self):
-		self.vx, self.vy = 0, 0
-		keys = pg.key.get_pressed()
-
-
-		if keys[pg.K_LEFT] or keys[pg.K_a]:
-			self.vel.x = -player_speed
-		elif keys[pg.K_RIGHT] or keys[pg.K_d]:
-			self.vel.x = player_speed
-		if keys[pg.K_UP] or keys[pg.K_w]:
-			self.vel.y = -player_speed
-		elif keys[pg.K_DOWN] or keys[pg.K_s]:
-			self.vel.y = player_speed
-
-		if self.vel.x != 0 and self.vel.y !=0:
-			self.vel *= 0.7071
-
-
 	def run(self):
-		self.events()
 		self.move()
 		self.draw()
 
