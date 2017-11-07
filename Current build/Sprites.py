@@ -80,6 +80,8 @@ class map_plane:
 		for i in range(0,2):
 		 	self.pos[i] += Kp*(mouse_pos[i] - self.pos[i])
 
+		# print("mouse_pos: ", mouse_pos, ", plane_pos: ", self.pos)
+
 	def run(self):
 		self.move()
 		self.draw()
@@ -102,7 +104,7 @@ class battle_plane:
 		self.screen.blit(img, (self.camera.apply(self)))
 
 	def move(self):
-		mouse_pos = pg.mouse.get_pos();
+		mouse_pos = pg.mouse.get_pos()
 		# Plane rotation
 		run = mouse_pos[0]-self.pos[0]
 		rise = mouse_pos[1]-self.pos[1]
