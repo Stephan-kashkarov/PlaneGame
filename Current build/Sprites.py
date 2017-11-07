@@ -3,7 +3,7 @@ import math
 from settings import *
 import functions
 
-Kp = 0.004
+Kp = 0.007
 
 class test:
 	def __init__(self, x, y, screen):
@@ -33,21 +33,22 @@ class test:
 		self.draw()
 
 class map_plane:
-	def __init__(self, x, y, sprite, era, screen):
+	def __init__(self, x, y, sprite, era, screen, camera):
 		self.pos = [x, y]
 		self.speed = [0, 0]
 		self.rot = 0
 		self.era = era
+		self.camera = [x , y]
 
 		if self.era == 0:
 			self.speed = PLAYERSPEED_1
-			self.sprite = sprite[1]
+			self.sprite = pg.transform.scale(sprite[1], (20,20))
 		if self.era == 1:
 			self.speed = PLAYERSPEED_2
-			self.sprite = sprite[2]
+			self.sprite = pg.transform.scale(sprite[2], (20,20))
 		if self.era == 2:
 			self.speed = PLAYERSPEED_3
-			self.sprite = sprite[3]
+			self.sprite = pg.transform.scale(sprite[3], (20,20))
 		self.rect = self.sprite.get_rect()
 		self.alt = 0
 		self.screen = screen
@@ -91,13 +92,14 @@ class battle_plane:
 	def __init__(self, screen, x, y, sprite):
 		self.pos = [x,y]
 		self.rot = 0
-		self.sprite = sprite
+		self.sprite = pg.transform.scale(sprite, (20,20))
 		self.rect = self.sprite.get_rect()
 		self.screen = screen
 
+
 	def draw(self):
 		img = pg.transform.rotate(self.sprite, -self.rot)
-		self.screen.blit(img, (self.pos[0], self.pos[1]))
+		self.screen.blit(img, (self.camera.apply(self)))
 
 	def move(self):
 		mouse_pos = pg.mouse.get_pos();

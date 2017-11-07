@@ -1,7 +1,6 @@
 import pygame as pg
 from Sprites import *
 from settings import *
-from game_map import *
 from sys import *
 from functions import *
 
@@ -19,6 +18,7 @@ class game():
 		pg.key.set_repeat(100, 50)
 		self.era = 0
 		self.load_data()
+		self.camera = [0,0]
 
 
 	def button(self, msg, x, y, width, height, colour1, colour2, func = False): # button function
@@ -60,13 +60,16 @@ class game():
 		self.map_group = [self.biplane, self.monoplane, self.jetplane]
 
 		#map load
-		self.map = TiledMap("img/Eastern_Front.tmx")
-		self.map_img = self.map.make_map()
+		self.map_img = pg.image.load("img/Eastern_front.png")
 		self.map_rect = self.map_img.get_rect()
+		self.map_width = self.map_img.get_width()
+		self.map_height = self.map_img.get_height()
+		self.camera = [0,0]
+		#self.camera = Camera(self.map_width, self.map_height)
 
 		#sprite load
 		self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
-		self.player = map_plane(200, 200, self.map_group, self.era, self.screen)
+		self.player = map_plane(200, 200, self.map_group, self.era, self.screen, self.camera)
 
 	def tutorial(self):
 		pass
@@ -113,13 +116,26 @@ class game():
 
 
 	def patrol(self):
-		self.camera = Camera(self.map.width, self.map.height)
+		self.camera = [0,0]
+
 		patroling = True
-		self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
-		self.camera.apply(self.plane)
-		self.camera.apply_rect(self.plane.rect)
+		self.screen.fill(black)
 		while patroling:
-			self.camera.update(self.player)
+			if self.player.pos[0] >= self.map_width + display_width/2:
+				self.camera[0] = self.map_width + display_width/2
+			else:
+				self.camera_x = self.player.pos[0] - display_width/3
+				self.camera[0] = self.camera_x
+				self.playerx = self.player.pos[0]
+
+			if self.player.pos[1] >= self.map_height + display_height/2:
+				self.camera[0] = self.map_height + display_height/2
+			else:
+				self.camera_y = self.player.pos[1] - display_height/3
+				self.camera[1] = self.camera_y
+				self.playery = self.player.pos[1]
+
+			self.screen.blit(self.map_img, (0 - self.camera[0], 0 - self.camera[1]))
 			self.player.run()
 			self.events()
 			pg.display.update()
@@ -151,8 +167,9 @@ class game():
 
 
 instance = game(display_height, display_width, fps)
-instance.intro()
-instance.menu()
+# instance.intro()
+# instance.menu()
+instance.patrol()
 #instance.test()
 #while instance:
 #	instance.hq()
