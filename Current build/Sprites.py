@@ -95,6 +95,7 @@ class battle_plane:
 		self.sprite = pg.transform.scale(sprite, (20,20))
 		self.rect = self.sprite.get_rect()
 		self.screen = screen
+		self.era = 0
 
 
 	def draw(self):
@@ -130,6 +131,21 @@ class battle_plane:
 		self.draw()
 
 	def upgrade(self):
-		if self.era < 3:
+		if self.era < 2:
 			self.era += 1
+
+class opponent:
+	def __init__(self, screen, x, y, sprite):
+		self.pos = [x,y]
+		self.rot = 0
+		self.sprite = pg.transform.scale(sprite, (20,20))
+		self.rect = self.sprite.get_rect()
+		self.screen = screen
+
+	def draw(self):
+		img = pg.transform.rotate(self.sprite, -self.rot)
+		self.screen.blit(img, (self.camera.apply(self)))
+
+	def shoot(self):
+		pass
 

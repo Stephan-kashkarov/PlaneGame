@@ -68,8 +68,9 @@ class game():
 		#self.camera = Camera(self.map_width, self.map_height)
 
 		#sprite load
-		self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
+		self.plane = battle_plane(self.screen, display_width/1*4, display_height/1*4, self.player_img)
 		self.player = map_plane(200, 200, self.map_group, self.era, self.screen, self.camera)
+		self.enemy = opponent(self.screen, display_width/3*4, display_height/3*4, self.player_img)
 
 	def tutorial(self):
 		pass
@@ -146,8 +147,13 @@ class game():
 
 
 
-	def battle(self, type):
-		pass
+	def battle(self):
+		self.screen.fill(black)
+		battle = True
+		while battle:
+			screen.blit(battle_backgroud.png, (0,0))
+			self.player.run()
+			self.enemy.run()
 
 	def test(self):
 		plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
