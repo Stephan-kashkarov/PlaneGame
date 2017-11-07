@@ -217,7 +217,6 @@ class game():
         # player.upgrade()
         pass
 
-
 instance = game(display_height, display_width, fps)
 # instance.intro()
 # instance.menu()
