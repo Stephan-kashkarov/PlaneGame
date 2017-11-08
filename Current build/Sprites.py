@@ -1,5 +1,6 @@
 import pygame as pg
 import math
+import random
 from settings import *
 from functions import *
 
@@ -90,6 +91,11 @@ class map_plane:
 		if self.era < 3:
 			self.era += 1
 
+	def collision(self, x, y, camera_pos):
+		if camera_pos[0] >= x + 60 - 360 and camera_pos[1] <= y + 30 - 640:
+			print("land")
+
+
 class battle_plane:
 	def __init__(self, screen, x, y, sprite):
 		self.pos = [x,y]
@@ -104,8 +110,8 @@ class battle_plane:
 
 
 	def draw(self):
-		img = pg.transform.rotate(self.sprite, -self.rot)
-		self.screen.blit(img, (self.pos[0], self.pos[1]))
+		img = rot_center(self.sprite, self.rect, 270-self.rot)
+		self.screen.blit(img[0], (self.pos[0], self.pos[1]))
 
 	def events(self):
 		keys = pg.key.get_pressed()
@@ -148,19 +154,3 @@ class battle_plane:
 	def upgrade(self):
 		if self.era < 2:
 			self.era += 1
-
-class opponent:
-	def __init__(self, screen, x, y, sprite):
-		self.pos = [x,y]
-		self.rot = 0
-		self.sprite = pg.transform.scale(sprite, (20,20))
-		self.rect = self.sprite.get_rect()
-		self.screen = screen
-
-	def draw(self):
-		rot_sprite = rot_center(self.sprite, self.rect, self.rot)
-		self.screen.blit(rot_sprite, (self.pos[0], self.pos[1]))
-
-	def shoot(self):
-		pass
-

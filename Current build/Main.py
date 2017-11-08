@@ -51,6 +51,7 @@ class game():
         self.biplane = pg.image.load("img/PLANE 2 N.png")
         self.monoplane = pg.image.load("img/PLANE 1 N.png")
         self.jetplane = pg.image.load("img/yak.png")
+        self.tonk_sprite = pg.image.load("img/tonk.png")
         self.player_img = pg.image.load("img/TPDWN.png")
         self.plane_img = pg.image.load("img/Player.png")
         self.alt_plane_img = pg.image.load("img/player_alt.png")
@@ -72,9 +73,8 @@ class game():
         #self.camera = Camera(self.map_width, self.map_height)
 
         #sprite load
-        self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
+        self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.jetplane)
         self.player = map_plane(200, 200, self.map_group, self.era, self.screen, self.camera_pos)
-
 
     def intro(self):
         self.screen.blit(self.full_logo, (0,0))
@@ -217,8 +217,9 @@ class game():
                 prev_player_pos[i] = self.player.pos[i]
 
             # print("prev_player_pos: ", prev_player_pos)
-
+            self.player.collision(1349, 626, self.camera_pos)
             self.screen.blit(self.map_img, (-self.camera_pos[0], -self.camera_pos[1]))
+            print("pos", self.player.pos, "camera pos",  self.camera_pos)
             self.player.run()
             self.events()
             pg.display.update()
@@ -266,8 +267,8 @@ instance = game(display_height, display_width, fps)
 # instance.intro()
 # instance.menu()
 # instance.quitscreen()
-instance.patrol()
-#instance.battle(instance.river)
+# instance.patrol()
+instance.battle(instance.river)
 #instance.test()
 #while instance:
 #   instance.hq()
