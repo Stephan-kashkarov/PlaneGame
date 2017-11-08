@@ -56,6 +56,9 @@ class game():
         self.alt_plane_img = pg.image.load("img/player_alt.png")
         self.full_logo = pg.image.load("img/full_logo.png")
         self.logo = pg.image.load("img/logo.png")
+        self.trees = pg.image.load("img/treebttl.png")
+        self.river = pg.image.load("img/riverbttl.png")
+        self.grass = pg.image.load("img/grassbttl.png")
         self.map_group = [self.biplane, self.monoplane, self.jetplane]
 
         #map load
@@ -118,7 +121,7 @@ class game():
     def patrol(self):
         patroling = True
         self.screen.fill(black)
-        
+
         self.camera_pos = [0,0]
         self.player.pos = [display_width/2, display_height/2]
         prev_player_pos = [display_width/2, display_height/2]
@@ -135,7 +138,7 @@ class game():
                 # Positive offset: moving towards the far edge of the map
                 if offset_this_frame[i] >= 0:
                     # print("positive")
-                    # Corner case: The camera is on the near side of the map and the player 
+                    # Corner case: The camera is on the near side of the map and the player
                     # is closer to the edge than the midscreen point
                     if self.camera_pos[i] == 0 and prev_player_pos[i] < self.camera_size[i]/2:
                         # print('1')
@@ -147,10 +150,10 @@ class game():
                             # print('2: ', "player_pos: ", self.player.pos[i], ", camera_pos: ", self.camera_pos[i], ", offset: ", offset_this_frame[i])
                         # else:
                         #     print('2_1: ', "player_pos: ", self.player.pos[i], ", camera_pos: ", self.camera_pos[i], ", offset: ", offset_this_frame[i])
-                        #   # We still have not reached midscreen point, we use the player position 
+                        #   # We still have not reached midscreen point, we use the player position
                         #   # calculated by the player.move() function
-                        #   pass 
-                    # Another corner case: the camera is on the far side of the map, 
+                        #   pass
+                    # Another corner case: the camera is on the far side of the map,
                     # we move the player until it reaches the far side of the screen
                     elif self.camera_pos[i] + self.camera_size[i] >= self.map_size[i]:
                         # print('3')
@@ -159,12 +162,12 @@ class game():
                             # print('4: ', "player_pos: ", self.player.pos[i], ", camera_pos: ", self.camera_pos[i], ", offset: ", offset_this_frame[i])
                         # else:
                         #     print('4_1: ', "player_pos: ", self.player.pos[i], ", camera_pos: ", self.camera_pos[i], ", offset: ", offset_this_frame[i])
-                        #   # We still have not reached the end of the screen, we use the player position 
+                        #   # We still have not reached the end of the screen, we use the player position
                         #   # calculated by the player.move() function
-                        #   pass 
+                        #   pass
                     else:
                         # This is the most common case: The camera is away from the edge of the map,
-                        # we move the camera while the player remains in the middle of the screen 
+                        # we move the camera while the player remains in the middle of the screen
                         if self.camera_pos[i] + self.camera_size[i] + offset_this_frame[i] < self.map_size[i]:
                             self.player.pos[i] = self.camera_size[i]/2
                             self.camera_pos[i] += offset_this_frame[i]
@@ -177,10 +180,10 @@ class game():
                             # print('6: ', "player_pos: ", self.player.pos[i], ", camera_pos: ", self.camera_pos[i], ", offset: ", offset_this_frame[i])
                 # # Negative offset, moving towards the near edge of the map
                 # else:
-                #   # Corner case: the camera is on the far edge of the map, and the player between the 
+                #   # Corner case: the camera is on the far edge of the map, and the player between the
                 #   # far edge of the screen and the midscreen point
                 #   if self.camera_pos[i] + self.camera_size[i] == self.map_size[i]:
-                #       # we move the player 
+                #       # we move the player
                 #       pass
 
                 prev_player_pos[i] = self.player.pos[i]
@@ -198,8 +201,14 @@ class game():
 
 
 
-    def battle(self, type):
-        pass
+    def battle(self, scene):
+        self.screen.fill(black)
+        battle = True
+        while battle:
+        	self.screen.blit(scene, (0,0))
+        	self.events()
+        	self.plane.run()
+        	pg.display.update()
 
     def test(self):
         plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
@@ -220,11 +229,12 @@ class game():
 instance = game(display_height, display_width, fps)
 # instance.intro()
 # instance.menu()
-instance.patrol()
+# instance.patrol()
+instance.battle(instance.river)
 #instance.test()
 #while instance:
 #   instance.hq()
 #   instance.patrol()
 #       instance.battle()
-#instance.boss()
+#instancee.boss()
 #quit()

@@ -1,7 +1,7 @@
 import pygame as pg
 import math
 from settings import *
-import functions
+from functions import *
 
 Kp = 0.007
 
@@ -14,7 +14,7 @@ class test:
 		self.screen = screen
 
 	def move(self):
-		keys = pg.get_pressed()
+		keys = pg.key.get_pressed()
 
 		if keys[pg.K_LEFT] or keys[pg.K_a]:
 			self.x -= 10
@@ -55,7 +55,7 @@ class map_plane:
 
 	def draw(self):
 		self.rect = self.sprite.get_rect()
-		rot_sprite = functions.rot_center(self.sprite, self.rect, self.rot)
+		rot_sprite = rot_center(self.sprite, self.rect, self.rot)
 		self.screen.blit(self.sprite, (self.pos[0], self.pos[1]))
 
 	def move(self):
@@ -98,37 +98,48 @@ class battle_plane:
 		self.rect = self.sprite.get_rect()
 		self.screen = screen
 		self.era = 0
+		self.rotation = 0
+		self.throttle = 0
 
 
 	def draw(self):
 		img = pg.transform.rotate(self.sprite, -self.rot)
-		self.screen.blit(img, (self.camera.apply(self)))
+		self.screen.blit(img, (self.pos[0], self.pos[1]))
+
+	def events(self):
+		keys = pg.key.get_pressed()
+
+		if keys[pg.K_LEFT] or keys[pg.K_a]:
+			self.rotation -= 10
+		elif keys[pg.K_RIGHT] or keys[pg.K_d]:
+			self.rotation += 10
+		if keys[pg.K_UP] or keys[pg.K_w]:
+			if self.throttle < 100:
+				self.throttle += 10
+		elif keys[pg.K_DOWN] or keys[pg.K_s]:
+			if self.throttle > 0:
+				self.throttle -= 10
+
+		if self.rotation <= 0:
+			self.rotation = 360
+		if self.rotation >= 360:
+			self.rotation = 0
 
 	def move(self):
-		mouse_pos = pg.mouse.get_pos()
-		# Plane rotation
-		run = mouse_pos[0]-self.pos[0]
-		rise = mouse_pos[1]-self.pos[1]
-		if run == 0:
-			run = 1
-		gradient = rise/run
+		# Velocity
+		if self.throttle > 1:
+			self.throttle = 1
+		if self.throttle < 0.2:
+			self.throttle = 0.2
+		if self.throttle >= 0.2 and self.throttle <= 1:
+			self.speed = (((2.5 * math.sin(math.radians(self.rotation))) + 2) * self.throttle) * 2#self.energy
+			# Directional movement
+			for i in range(0,2):
+				self.pos[i] += math.cos(math.radians(self.rotation)) * self.speed
 
-		#print(gradient)
-		self.rot = math.degrees(math.atan(gradient))
-		if run <= 0:
-			if rise > 0:
-				self.rot = -180 + self.rot
-			else:
-				self.rot = 180 + self.rot
-
-		# New plane position
-		for i in range(0,2):
-		 	self.pos[i] += Kp*(mouse_pos[i] - self.pos[i])
-
-	def shoot(self):
-		pass
 
 	def run(self):
+		self.events()
 		self.move()
 		self.draw()
 
@@ -145,8 +156,8 @@ class opponent:
 		self.screen = screen
 
 	def draw(self):
-		img = pg.transform.rotate(self.sprite, -self.rot)
-		self.screen.blit(img, (self.camera.apply(self)))
+		rot_sprite = rot_center(self.sprite, self.rect, self.rot)
+		self.screen.blit(rot_sprite, (self.pos[0], self.pos[1]))
 
 	def shoot(self):
 		pass
