@@ -55,8 +55,8 @@ class map_plane:
 
 	def draw(self):
 		self.rect = self.sprite.get_rect()
-		rot_sprite = rot_center(self.sprite, self.rect, self.rot)
-		self.screen.blit(self.sprite, (self.pos[0], self.pos[1]))
+		rot_sprite = rot_center(self.sprite, self.rect, 270-self.rot)
+		self.screen.blit(rot_sprite[0], (self.pos[0], self.pos[1]))
 
 	def move(self):
 		mouse_pos = pg.mouse.get_pos()
