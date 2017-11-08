@@ -229,7 +229,7 @@ class game():
 instance = game(display_height, display_width, fps)
 # instance.intro()
 # instance.menu()
-# instance.patrol()
+#instance.patrol()
 instance.battle(instance.river)
 #instance.test()
 #while instance:

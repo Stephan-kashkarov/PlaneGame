@@ -100,6 +100,7 @@ class battle_plane:
 		self.era = 0
 		self.rotation = 0
 		self.throttle = 0
+		self.energy = 1
 
 
 	def draw(self):
@@ -110,15 +111,15 @@ class battle_plane:
 		keys = pg.key.get_pressed()
 
 		if keys[pg.K_LEFT] or keys[pg.K_a]:
-			self.rotation -= 10
+			self.rotation -= 1
 		elif keys[pg.K_RIGHT] or keys[pg.K_d]:
-			self.rotation += 10
+			self.rotation += 1
 		if keys[pg.K_UP] or keys[pg.K_w]:
 			if self.throttle < 100:
-				self.throttle += 10
+				self.throttle += 0.1
 		elif keys[pg.K_DOWN] or keys[pg.K_s]:
 			if self.throttle > 0:
-				self.throttle -= 10
+				self.throttle -= 0.1
 
 		if self.rotation <= 0:
 			self.rotation = 360
@@ -132,10 +133,11 @@ class battle_plane:
 		if self.throttle < 0.2:
 			self.throttle = 0.2
 		if self.throttle >= 0.2 and self.throttle <= 1:
-			self.speed = (((2.5 * math.sin(math.radians(self.rotation))) + 2) * self.throttle) * 2#self.energy
+			self.speed = (((2.5 * math.sin(math.radians(self.rotation))) + 2) * self.throttle) * self.energy
 			# Directional movement
-			for i in range(0,2):
-				self.pos[i] += math.cos(math.radians(self.rotation)) * self.speed
+			self.pos[0] += math.cos(math.radians(self.rotation)) * self.speed
+			self.pos[1] += math.sin(math.radians(self.rotation)) * self.speed
+			print("pos", self.pos, ", speed", self.speed, ", rotation", self.rotation)
 
 
 	def run(self):
