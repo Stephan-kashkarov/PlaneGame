@@ -142,11 +142,6 @@ class battle_plane:
 			if self.throttle > 0:
 				self.throttle -= 0.1
 
-		if self.rotation < 0:
-			self.rotation = 360
-		if self.rotation > 360:
-			self.rotation = 0
-
 	def move(self):
 		# Velocity
 		if self.throttle > 1:
