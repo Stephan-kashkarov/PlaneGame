@@ -75,6 +75,8 @@ class game():
 		self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.jetplane)
 		self.player = map_plane(200, 200, self.map_group, self.era, self.screen)
 		self.opponent = map_opponent(self.map_group, self.era, self.screen, self.camera_size, self.map_size)
+		self.opponent1 = map_opponent(self.map_group, self.era, self.screen, self.camera_size, self.map_size)
+		self.opponent2 = map_opponent(self.map_group, self.era, self.screen, self.camera_size, self.map_size)
 
 		#music load
 		self.intromusic = pg.mixer.music.load("music/SOV_anthem.mp3")
@@ -233,6 +235,8 @@ class game():
 				prev_player_pos[i] = self.player.pos[i]
 
 			self.opponent.move(self.player.pos, self.camera_pos)
+			self.opponent1.move(self.player.pos, self.camera_pos)
+			self.opponent2.move(self.player.pos, self.camera_pos)
 
 			# print("prev_player_pos: ", prev_player_pos)
 			col_check = self.player.collision(1227, 490, self.camera_pos)
@@ -267,6 +271,17 @@ class game():
 			if col_check == True:
 				self.hq()
 
+			battle_check = self.opponent.collision(self.player.pos)
+			if battle_check == True:
+				self.battle()
+
+			battle_check = self.opponent1.collision(self.player.pos)
+			if battle_check == True:
+				self.battle()
+
+			battle_check = self.opponent2.collision(self.player.pos)
+			if battle_check == True:
+				self.battle()
 
 			self.screen.blit(self.map_img, (-self.camera_pos[0], -self.camera_pos[1]))
 			self.player.draw()
@@ -280,9 +295,16 @@ class game():
 
 
 
-	def battle(self, scene):
+	def battle(self):
 		self.screen.fill(black)
 		battle = True
+		random_num = random.randint(0,2)
+		if random_num == 0:
+			scene = self.trees
+		if random_num == 1:
+			scene = self.river
+		if random_num == 2:
+			scene = self.grass
 		while battle:
 			self.screen.blit(scene, (0,0))
 			self.events()
@@ -303,8 +325,8 @@ class game():
 
 
 instance = game(display_height, display_width, fps)
-instance.intro()
-instance.menu()
-instance.patrol()
-# instance.battle(instance.river)
+# instance.intro()
+# instance.menu()
+# instance.patrol()
+instance.battle()
 # quit()

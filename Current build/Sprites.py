@@ -110,7 +110,7 @@ class battle_plane:
 		self.era = 0
 		self.rotation = 0
 		self.throttle = 0
-		self.energy = 1
+		self.energy = 4
 
 
 	def draw(self):
@@ -176,8 +176,8 @@ class map_opponent:
 		self.step_count = 0
 		self.draw_me = False
 		self.pos_on_screen = [0,0]
-		
-		print("NumSteps: ", self.num_steps)
+
+		print("NumSteps: ", self.num_steps, "Seconds: ", self.num_steps/fps, "good luck running!")
 
 		if self.era == 0:
 			self.sprite = pg.transform.scale(sprite[1], (20,20))
@@ -242,11 +242,9 @@ class map_opponent:
 		if self.era < 3:
 			self.era += 1
 
-	def collision(self, x, y, camera_pos):
-		playerx = camera_pos[0] + display_width/2
-		playery = camera_pos[1] + display_height/2
-
-		if playerx <= x + 60 and playerx >= x:
-			if playery <= y + 30 and playery >= y:
+	def collision(self, target):
+		target_pos_on_screen = target
+		if self.pos_on_screen[0] <= target_pos_on_screen[0] + 60 and self.pos_on_screen[0] >= target_pos_on_screen[0]:
+			if self.pos_on_screen[1] <= target_pos_on_screen[1] + 60 and self.pos_on_screen[1] >= target_pos_on_screen[1]:
 				print("collision")
 				return True
