@@ -4,7 +4,7 @@ import random
 from settings import *
 from functions import *
 
-Kp = 0.007
+Kp = 0.01
 
 class test:
 	def __init__(self, x, y, screen):
@@ -34,7 +34,7 @@ class test:
 		self.draw()
 
 class map_plane:
-	def __init__(self, x, y, sprite, era, screen, camera):
+	def __init__(self, x, y, sprite, era, screen):
 		self.pos = [x, y]
 		self.speed = [0, 0]
 		self.rot = 0
@@ -79,7 +79,7 @@ class map_plane:
 
 		# New plane position
 		for i in range(0,2):
-		 	self.pos[i] += Kp*(mouse_pos[i] - self.pos[i])
+			self.pos[i] += Kp*(mouse_pos[i] - self.pos[i])
 
 		# print("mouse_pos: ", mouse_pos, ", plane_pos: ", self.pos)
 
@@ -158,3 +158,70 @@ class battle_plane:
 	def upgrade(self):
 		if self.era < 2:
 			self.era += 1
+
+class map_opponent:
+	def __init__(self, x, y, sprite, era, screen):
+		self.pos = [x, y]
+		self.speed = [0, 0]
+		self.rot = 0
+		self.era = era
+		self.camera = [x , y]
+
+		if self.era == 0:
+			self.speed = PLAYERSPEED_1
+			self.sprite = pg.transform.scale(sprite[0], (20,20))
+		if self.era == 1:
+			self.speed = PLAYERSPEED_2
+			self.sprite = pg.transform.scale(sprite[1], (20,20))
+		if self.era == 2:
+			self.speed = PLAYERSPEED_3
+			self.sprite = pg.transform.scale(sprite[2], (20,20))
+		self.rect = self.sprite.get_rect()
+		self.alt = 0
+		self.screen = screen
+
+	def draw(self):
+		self.rect = self.sprite.get_rect()
+		rot_sprite = rot_center(self.sprite, self.rect, 270-self.rot)
+		self.screen.blit(rot_sprite[0], (self.pos[0], self.pos[1]))
+
+	def move(self):
+		player_pos = pg.mouse.get_pos()
+
+		# Plane rotation
+		run = player_pos[0]-self.pos[0]
+		rise = player_pos[1]-self.pos[1]
+		if run == 0:
+			run = 1
+		gradient = rise/run
+
+		#print(gradient)
+		self.rot = math.degrees(math.atan(gradient))
+		if run <= 0:
+			if rise > 0:
+				self.rot = -180 + self.rot
+			else:
+				self.rot = 180 + self.rot
+
+		# New plane position
+		for i in range(0,2):
+			self.pos[i] += Kp*(player_pos[i] - self.pos[i])
+
+		# print("player_pos: ", player_pos, ", plane_pos: ", self.pos)
+
+	def run(self):
+		self.move()
+		self.draw()
+
+	def upgrade(self):
+		if self.era < 3:
+			self.era += 1
+
+	def collision(self, x, y, camera_pos):
+		playerx = camera_pos[0] + display_width/2
+		playery = camera_pos[1] + display_height/2
+
+		if playerx <= x + 60 and playerx >= x:
+			if playery <= y + 30 and playery >= y:
+				print("collision")
+				return True

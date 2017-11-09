@@ -51,7 +51,7 @@ class game():
 		self.biplane = pg.image.load("img/PLANE 2 N.png")
 		self.monoplane = pg.image.load("img/PLANE 1 N.png")
 		self.jetplane = pg.image.load("img/yak.png")
-		self.tonk_sprite = pg.image.load("img/tonk.png")
+		# self.tonk_sprite = pg.image.load("img/tonk.png")
 		self.plane_img = pg.image.load("img/Player.png")
 		self.alt_plane_img = pg.image.load("img/player_alt.png")
 		self.full_logo = pg.image.load("img/full_logo.png")
@@ -73,7 +73,7 @@ class game():
 
 		#sprite load
 		self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.jetplane)
-		self.player = map_plane(200, 200, self.map_group, self.era, self.screen, self.camera_pos)
+		self.player = map_plane(200, 200, self.map_group, self.era, self.screen)
 
 	def intro(self):
 		self.screen.blit(self.full_logo, (0,0))
@@ -123,16 +123,16 @@ class game():
 		patroling = True
 		self.screen.fill(black)
 
-		tanks_to_print = 20
-		tank_coords = []
-		while tanks_to_print:
+		# tanks_to_print = 20
+		# tank_coords = []
+		# while tanks_to_print:
 
-			ran_x = random.randint(0, display_width)
-			ran_y = random.randint(0, display_height)
-			tank_pos = (ran_x, ran_y)
-			self.screen.blit(self.tonk_sprite, tank_pos)
-			tank_coords.append(tank_pos)
-			tanks_to_print -= 1
+		# 	ran_x = random.randint(0, display_width)
+		# 	ran_y = random.randint(0, display_height)
+		# 	tank_pos = (ran_x, ran_y)
+		# 	self.screen.blit(self.tonk_sprite, tank_pos)
+		# 	tank_coords.append(tank_pos)
+		# 	tanks_to_print -= 1
 
 		self.camera_pos = [0,0]
 		self.player.pos = [display_width/2, display_height/2]
@@ -261,7 +261,7 @@ class game():
 
 
 			self.screen.blit(self.map_img, (-self.camera_pos[0], -self.camera_pos[1]))
-			self.player.run()
+			self.player.draw()
 			self.events()
 			pg.display.update()
 			# collision = self.player.col()
