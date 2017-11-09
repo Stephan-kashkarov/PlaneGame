@@ -75,6 +75,11 @@ class game():
 		self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.jetplane)
 		self.player = map_plane(200, 200, self.map_group, self.era, self.screen)
 
+		#music load
+		self.intromusic = pg.mixer.music.load("music/SOV_anthem.mp3")
+		# self.shoot = pg.mixer
+		self.endmusic = pg.mixer.music.load("music/game_music.mp3")
+
 	def intro(self):
 		self.screen.blit(self.full_logo, (0,0))
 		intro = True
@@ -294,8 +299,8 @@ class game():
 
 
 instance = game(display_height, display_width, fps)
-instance.intro()
-instance.menu()
+# instance.intro()
+# instance.menu()
 # instance.patrol()
-# instance.battle(instance.river)
+instance.battle(instance.river)
 # quit()
