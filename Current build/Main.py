@@ -52,7 +52,6 @@ class game():
         self.monoplane = pg.image.load("img/PLANE 1 N.png")
         self.jetplane = pg.image.load("img/yak.png")
         self.tonk_sprite = pg.image.load("img/tonk.png")
-        self.player_img = pg.image.load("img/TPDWN.png")
         self.plane_img = pg.image.load("img/Player.png")
         self.alt_plane_img = pg.image.load("img/player_alt.png")
         self.full_logo = pg.image.load("img/full_logo.png")
@@ -239,17 +238,6 @@ class game():
             self.plane.run()
             pg.display.update()
 
-    def test(self):
-        plane = battle_plane(self.screen, display_width/2, display_height/2, self.player_img)
-        self.screen.fill(black)
-        test = True
-        while test:
-            self.screen.fill(black)
-            self.events()
-            plane.run()
-            pg.display.flip()
-            self.clock.tick()
-
     def upgrade(self):
         # plane.upgrade()
         # player.upgrade()
@@ -266,7 +254,6 @@ class game():
 instance = game(display_height, display_width, fps)
 # instance.intro()
 # instance.menu()
-# instance.quitscreen()
 # instance.patrol()
 instance.battle(instance.river)
 #instance.test()
