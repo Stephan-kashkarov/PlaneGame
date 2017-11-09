@@ -114,11 +114,12 @@ class battle_plane:
 
 
 	def draw(self):
-		new_img = rot_center(self.sprite, self.rect, 270-self.rot)
+		new_img = rot_center(self.sprite, self.rect, 270-self.rotation)
 		self.screen.blit(new_img[0], (self.pos[0], self.pos[1]))
 
 	def events(self):
 		keys = pg.key.get_pressed()
+		mouse_pos = pg.mouse.get_pos()
 
 		# Plane rotation
 		run = mouse_pos[0]-self.pos[0]
@@ -128,12 +129,12 @@ class battle_plane:
 		gradient = rise/run
 
 		#print(gradient)
-		self.rot = math.degrees(math.atan(gradient))
+		self.rotation = math.degrees(math.atan(gradient))
 		if run <= 0:
 			if rise > 0:
-				self.rot = -180 + self.rot
+				self.rotation = -180 + self.rotation
 			else:
-				self.rot = 180 + self.rot
+				self.rotation = 180 + self.rotation
 		if keys[pg.K_UP] or keys[pg.K_w]:
 			if self.throttle < 100:
 				self.throttle += 0.1
