@@ -170,57 +170,74 @@ class battle_plane:
 			self.era += 1
 
 class map_opponent:
-	def __init__(self, x, y, sprite, era, screen):
-		self.pos = [x, y]
-		self.speed = [0, 0]
+	def __init__(self, sprite, era, screen, camera_size, map_size):
+		self.pos_on_map = [random.randint(0, map_size[0]), random.randint(0, map_size[1])]
 		self.rot = 0
 		self.era = era
-		self.camera = [x , y]
+		self.camera_size = camera_size
+		self.map_size = map_size
+		self.num_steps = fps*random.randint(10, 60)	# this is how many steps it will take to reach the player
+		self.step_count = 0
+		self.draw_me = False
+		self.pos_on_screen = [0,0]
 
 		if self.era == 0:
-			self.speed = PLAYERSPEED_1
 			self.sprite = pg.transform.scale(sprite[0], (20,20))
 		if self.era == 1:
-			self.speed = PLAYERSPEED_2
 			self.sprite = pg.transform.scale(sprite[1], (20,20))
 		if self.era == 2:
-			self.speed = PLAYERSPEED_3
 			self.sprite = pg.transform.scale(sprite[2], (20,20))
 		self.rect = self.sprite.get_rect()
 		self.alt = 0
 		self.screen = screen
 
 	def draw(self):
-		self.rect = self.sprite.get_rect()
-		rot_sprite = rot_center(self.sprite, self.rect, 270-self.rot)
-		self.screen.blit(rot_sprite[0], (self.pos[0], self.pos[1]))
+		if self.draw_me:
+			self.rect = self.sprite.get_rect()
+			rot_sprite = rot_center(self.sprite, self.rect, 270-self.rot)
+			self.screen.blit(rot_sprite[0], (self.pos_on_screen[0], self.pos_on_screen[1]))
 
-	def move(self):
-		player_pos = pg.mouse.get_pos()
+	def move(self, player_pos, camera_pos):
+		if self.step_count >= self.num_steps:
+			# We finally reached the player, prepare for the battle
+			self.pos_on_screen = [player_pos[0], player_pos[1]]
+			self.draw_me = True
+			self.pos_on_map = [player_pos[0] + camera_pos[0], player_pos[1]+camera_pos[1]]
+		else:
+			# Converting player position on the camera to the position on the map
+			player_pos_on_map = [self.camera_pos[0] + player_pos[0], self.camera_pos[1] + player_pos[1]]
+			distance = [player_pos_on_map[0] - self.pos_on_map[0], player_pos_on_map[1] - self.pos_on_map[1]]
 
-		# Plane rotation
-		run = player_pos[0]-self.pos[0]
-		rise = player_pos[1]-self.pos[1]
-		if run == 0:
-			run = 1
-		gradient = rise/run
+			on_screen = [False, False]
 
-		#print(gradient)
-		self.rot = math.degrees(math.atan(gradient))
-		if run <= 0:
-			if rise > 0:
-				self.rot = -180 + self.rot
-			else:
-				self.rot = 180 + self.rot
+			for i in range(0,2):
+				self.pos_on_map[i] += distance[i]/(self.num_steps - self.step_count)
+				self.pos_on_screen[i] = self.pos_on_map[i] - camera_pos[i]
+				if self.pos_on_screen[i] >= 0 and self.pos_on_screen[i] < camera_size[i]:
+					on_screen[i] = True
 
-		# New plane position
-		for i in range(0,2):
-			self.pos[i] += Kp*(player_pos[i] - self.pos[i])
+			if on_screen[0] == True and on_screen[1] == True:
+				self.draw_me = True
 
-		# print("player_pos: ", player_pos, ", plane_pos: ", self.pos)
+				# Plane rotation
+				run = player_pos_on_map[0]-self.pos_on_map[0]
+				rise = player_pos_on_map[1]-self.pos_on_map[1]
+				if run == 0:
+					run = 1
+				gradient = rise/run
 
-	def run(self):
-		self.move()
+				#print(gradient)
+				self.rot = math.degrees(math.atan(gradient))
+				if run <= 0:
+					if rise > 0:
+						self.rot = -180 + self.rot
+					else:
+						self.rot = 180 + self.rot
+
+			self.step_count +=1
+
+	def run(self, player_pos, camera_pos):
+		self.move(plane_pos, camera_pos)
 		self.draw()
 
 	def upgrade(self):
