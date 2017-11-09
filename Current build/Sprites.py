@@ -92,9 +92,13 @@ class map_plane:
 			self.era += 1
 
 	def collision(self, x, y, camera_pos):
-		if camera_pos[0] >= x + 60 - 360 and camera_pos[1] <= y + 30 - 640:
-			print("land")
+		playerx = camera_pos[0] + display_width/2
+		playery = camera_pos[1] + display_height/2
 
+		if playerx <= x + 60 and playerx >= x:
+			if playery <= y + 30 and playery >= y:
+				print("collision")
+				return True
 
 class battle_plane:
 	def __init__(self, screen, x, y, sprite):
@@ -110,8 +114,8 @@ class battle_plane:
 
 
 	def draw(self):
-		img = rot_center(self.sprite, self.rect, 270-self.rot)
-		self.screen.blit(img[0], (self.pos[0], self.pos[1]))
+		new_img = rot_center(self.sprite, self.rect, 270-self.rot)
+		self.screen.blit(new_img[0], (self.pos[0], self.pos[1]))
 
 	def events(self):
 		keys = pg.key.get_pressed()
@@ -127,9 +131,9 @@ class battle_plane:
 			if self.throttle > 0:
 				self.throttle -= 0.1
 
-		if self.rotation <= 0:
+		if self.rotation < 0:
 			self.rotation = 360
-		if self.rotation >= 360:
+		if self.rotation > 360:
 			self.rotation = 0
 
 	def move(self):
