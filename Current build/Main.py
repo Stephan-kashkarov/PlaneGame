@@ -74,6 +74,7 @@ class game():
 		#sprite load
 		self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.jetplane)
 		self.player = map_plane(200, 200, self.map_group, self.era, self.screen)
+		self.opponent = map_opponent(self.map_group, self.era, self.screen, self.camera_size, self.map_size)
 
 		#music load
 		self.intromusic = pg.mixer.music.load("music/SOV_anthem.mp3")
@@ -231,6 +232,8 @@ class game():
 
 				prev_player_pos[i] = self.player.pos[i]
 
+			self.opponent.move(self.player.pos, self.camera_pos)
+
 			# print("prev_player_pos: ", prev_player_pos)
 			col_check = self.player.collision(1227, 490, self.camera_pos)
 			if col_check != True:
@@ -267,6 +270,7 @@ class game():
 
 			self.screen.blit(self.map_img, (-self.camera_pos[0], -self.camera_pos[1]))
 			self.player.draw()
+			self.opponent.draw()
 			self.events()
 			pg.display.update()
 			# collision = self.player.col()
@@ -299,8 +303,8 @@ class game():
 
 
 instance = game(display_height, display_width, fps)
-# instance.intro()
-# instance.menu()
-# instance.patrol()
-instance.battle(instance.river)
+instance.intro()
+instance.menu()
+instance.patrol()
+# instance.battle(instance.river)
 # quit()

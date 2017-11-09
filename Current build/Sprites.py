@@ -181,13 +181,15 @@ class map_opponent:
 		self.step_count = 0
 		self.draw_me = False
 		self.pos_on_screen = [0,0]
+		
+		print("NumSteps: ", self.num_steps)
 
 		if self.era == 0:
-			self.sprite = pg.transform.scale(sprite[0], (20,20))
-		if self.era == 1:
 			self.sprite = pg.transform.scale(sprite[1], (20,20))
-		if self.era == 2:
+		if self.era == 1:
 			self.sprite = pg.transform.scale(sprite[2], (20,20))
+		if self.era == 2:
+			self.sprite = pg.transform.scale(sprite[3], (20,20))
 		self.rect = self.sprite.get_rect()
 		self.alt = 0
 		self.screen = screen
@@ -206,7 +208,7 @@ class map_opponent:
 			self.pos_on_map = [player_pos[0] + camera_pos[0], player_pos[1]+camera_pos[1]]
 		else:
 			# Converting player position on the camera to the position on the map
-			player_pos_on_map = [self.camera_pos[0] + player_pos[0], self.camera_pos[1] + player_pos[1]]
+			player_pos_on_map = [camera_pos[0] + player_pos[0], camera_pos[1] + player_pos[1]]
 			distance = [player_pos_on_map[0] - self.pos_on_map[0], player_pos_on_map[1] - self.pos_on_map[1]]
 
 			on_screen = [False, False]
@@ -214,7 +216,7 @@ class map_opponent:
 			for i in range(0,2):
 				self.pos_on_map[i] += distance[i]/(self.num_steps - self.step_count)
 				self.pos_on_screen[i] = self.pos_on_map[i] - camera_pos[i]
-				if self.pos_on_screen[i] >= 0 and self.pos_on_screen[i] < camera_size[i]:
+				if self.pos_on_screen[i] >= 0 and self.pos_on_screen[i] < self.camera_size[i]:
 					on_screen[i] = True
 
 			if on_screen[0] == True and on_screen[1] == True:
