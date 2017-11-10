@@ -78,9 +78,11 @@ class game():
 		#sprite load
 		self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.jetplane)
 		self.player = map_plane(200, 200, self.map_group, self.era, self.screen)
-		self.opponent = map_opponent(self.map_group, self.era, self.screen, self.camera_size, self.map_size)
-		self.opponent1 = map_opponent(self.map_group, self.era, self.screen, self.camera_size, self.map_size)
-		self.opponent2 = map_opponent(self.map_group, self.era, self.screen, self.camera_size, self.map_size)
+
+		self.opponents = []
+
+		for i in range(5):
+			self.opponents.append(map_opponent(self.map_group, self.era, self.screen, self.camera_size, self.map_size))
 
 		#music load
 		self.intromusic = pg.mixer.music.load("music/SOV_anthem.mp3")
@@ -238,9 +240,9 @@ class game():
 
 				prev_player_pos[i] = self.player.pos[i]
 
-			self.opponent.move(self.player.pos, self.camera_pos)
-			self.opponent1.move(self.player.pos, self.camera_pos)
-			self.opponent2.move(self.player.pos, self.camera_pos)
+			for opponent in self.opponents:
+				if not opponent.defeated:
+					opponent.move(self.player.pos, self.camera_pos)
 
 			# print("prev_player_pos: ", prev_player_pos)
 			col_check = self.player.collision(1227, 490, self.camera_pos)
@@ -275,21 +277,19 @@ class game():
 			if col_check == True:
 				self.hq()
 
-			battle_check = self.opponent.collision(self.player.pos)
-			if battle_check == True:
-				self.battle()
-
-			battle_check = self.opponent1.collision(self.player.pos)
-			if battle_check == True:
-				self.battle()
-
-			battle_check = self.opponent2.collision(self.player.pos)
-			if battle_check == True:
-				self.battle()
+			for opponent in self.opponents:
+				if not opponent.defeated:
+					battle_check = opponent.collision(self.player.pos)
+					if battle_check == True:
+						self.battle()
 
 			self.screen.blit(self.map_img, (-self.camera_pos[0], -self.camera_pos[1]))
 			self.player.draw()
-			self.opponent.draw()
+
+			for opponent in self.opponents:
+				if not opponent.defeated:
+					opponent.draw()
+
 			self.events()
 			pg.display.update()
 			# collision = self.player.col()
