@@ -64,6 +64,7 @@ class game():
 		self.grass = pg.image.load("img/grassbttl.png")
 		self.quitscrn = pg.image.load("img/quit.png")
 		self.loadingscrn = pg.image.load("img/loadingscrn.png")
+		self.bull_sprite = pg.image.load("img/bullet.png")
 		self.map_group = [self.biplane, self.monoplane, self.jetplane]
 
 		#map load
@@ -76,7 +77,7 @@ class game():
 		#self.camera = Camera(self.map_width, self.map_height)
 
 		#sprite load
-		self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.jetplane)
+		self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.jetplane, self.bull_sprite)
 		self.player = map_plane(200, 200, self.map_group, self.era, self.screen)
 
 		self.opponents = []
@@ -136,18 +137,6 @@ class game():
 	def patrol(self):
 		patroling = True
 		self.screen.fill(black)
-
-		# tanks_to_print = 20
-		# tank_coords = []
-		# while tanks_to_print:
-
-		# 	ran_x = random.randint(0, display_width)
-		# 	ran_y = random.randint(0, display_height)
-		# 	tank_pos = (ran_x, ran_y)
-		# 	self.screen.blit(self.tonk_sprite, tank_pos)
-		# 	tank_coords.append(tank_pos)
-		# 	tanks_to_print -= 1
-
 		self.camera_pos = [0,0]
 		self.player.pos = [display_width/2, display_height/2]
 		prev_player_pos = [display_width/2, display_height/2]
@@ -332,8 +321,8 @@ class game():
 
 
 instance = game(display_height, display_width, fps)
-instance.intro()
-instance.menu()
-instance.patrol()
-# instance.battle()
+# instance.intro()
+# instance.menu()
+# instance.patrol()
+instance.battle()
 # # quit()
