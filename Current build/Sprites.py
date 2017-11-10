@@ -101,16 +101,19 @@ class map_plane:
 				return True
 
 class battle_plane:
-	def __init__(self, screen, x, y, sprite):
+	def __init__(self, screen, x, y, sprite, bull_sprite):
 		self.pos = [x,y]
 		self.rot = 0
 		self.sprite = pg.transform.scale(sprite, (20,20))
 		self.rect = self.sprite.get_rect()
+		self.bull_sprite = bull_sprite
 		self.screen = screen
 		self.era = 0
 		self.rotation = 0
 		self.throttle = 0
 		self.energy = 4
+		self.bullets = {}
+		self.bull_num = 0
 
 
 	def draw(self):
@@ -120,6 +123,7 @@ class battle_plane:
 	def events(self):
 		keys = pg.key.get_pressed()
 		mouse_pos = pg.mouse.get_pos()
+		mouse_click = pg.mouse.get_pressed()
 
 		# Plane rotation
 		run = mouse_pos[0]-self.pos[0]
@@ -141,6 +145,8 @@ class battle_plane:
 		elif keys[pg.K_DOWN] or keys[pg.K_s]:
 			if self.throttle > 0:
 				self.throttle -= 0.1
+		if mouse_click[0] == True:
+			self.shoot()
 
 	def move(self):
 		# Velocity
@@ -157,9 +163,19 @@ class battle_plane:
 			self.pos[1] += math.sin(math.radians(self.rotation)) * self.speed
 			print("pos", self.pos, ", speed", self.speed, ", rotation", self.rotation)
 
+		for i in self.bullets:
+			i.move()
+
+
+
 	def upgrade(self):
 		if self.era < 2:
 			self.era += 1
+
+	def shoot(self):
+		bull_name = "bullet" + str(self.bull_num)
+		self.bullets[bull_name] = bullet(self.pos[0], self.pos[1], self.rotation, self.bull_sprite)
+		self.bull_num += 1
 
 class map_opponent:
 	def __init__(self, sprite, era, screen, camera_size, map_size):
@@ -261,6 +277,6 @@ class bullet:
 		self.screen.blit(sprite, (x,y))
 
 	def collide(self, target_pos):
-		if self.x >= target_pos[0] amd self.x <= target_pos[0] + 5:
-			if self.x >= target_pos[0] amd self.x <= target_pos[0] + 5:
+		if self.x >= target_pos[0] and self.x <= target_pos[0] + 5:
+			if self.x >= target_pos[0] and self.x <= target_pos[0] + 5:
 				return True
