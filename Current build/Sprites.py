@@ -148,10 +148,8 @@ class battle_plane:
 		if mouse_click[0] == True:
 			self.shoot()
 
-	def move(self):
+	def move(self, enemy_pos):
 		# Velocity
-		if self.pos[1] >= display_height - 100:
-			return True
 		if self.throttle > 1:
 			self.throttle = 1
 		if self.throttle < 0.2:
@@ -161,18 +159,24 @@ class battle_plane:
 			# Directional movement
 			self.pos[0] += math.cos(math.radians(self.rotation)) * self.speed
 			self.pos[1] += math.sin(math.radians(self.rotation)) * self.speed
-			print("pos", self.pos, ", speed", self.speed, ", rotation", self.rotation)
+			# print("pos", self.pos, ", speed", self.speed, ", rotation", self.rotation)
 
-		for k, v in self.bullets:
-			v.move()
-
+		if len(self.bullets) > 0:
+			for k in self.bullets:
+				self.bullets[k].move()
+				col = self.bullets[k].collide(enemy_pos)
+				if col == True:
+					return True
+				self.bullets[k].draw()
+		return False
+		
 	def upgrade(self):
 		if self.era < 2:
 			self.era += 1
 
 	def shoot(self):
 		bull_name = "bullet" + str(self.bull_num)
-		self.bullets[bull_name] = bullet(self.pos[0], self.pos[1], self.rotation, self.bull_sprite)
+		self.bullets[bull_name] = bullet(self.pos[0], self.pos[1], self.rotation, self.bull_sprite, self.screen)
 		self.bull_num += 1
 
 class map_opponent:
@@ -263,19 +267,20 @@ class map_opponent:
 				return True
 
 class bullet:
-	def __init__(self, x, y, rot, sprite):
+	def __init__(self, x, y, rot, sprite, screen):
 		self.x = x
 		self.y = y
 		self.rot = rot
 		self.sprite = rot_center(sprite, sprite.get_rect(), self.rot)
 		self.speed = 10
+		self.screen = screen
 
 	def move(self):
 		self.x += math.cos(math.radians(self.rot)) * self.speed
 		self.y += math.sin(math.radians(self.rot)) * self.speed
 
 	def draw(self):
-		self.screen.blit(sprite, (x,y))
+		self.screen.blit(self.sprite[0], (self.x,self.y))
 
 	def collide(self, target_pos):
 		if self.x >= target_pos[0] and self.x <= target_pos[0] + 5:
@@ -283,15 +288,14 @@ class bullet:
 				return True
 
 class battle_opponent:
-	def __init__(self, screen, x, y, sprite, bull_sprite):
-		self.pos = [x,y]
+	def __init__(self, screen, sprite, bull_sprite):
+		self.pos = [random.randint(10, display_width - 10), random.randint(10, display_height - 150)]
 		self.pos_target = [random.randint(10, display_width - 10), random.randint(10, display_height - 150)]
-		self.rot = 0
 		self.sprite = pg.transform.scale(sprite, (20,20))
 		self.rect = self.sprite.get_rect()
 		self.screen = screen
 		self.era = 0
-		self.rotation = 0
+		self.rot = 0
 		self.approach_steps = fps*5
 		self.step_count = 0 
 		self.bull_sprite = bull_sprite
@@ -299,16 +303,16 @@ class battle_opponent:
 		self.bull_num = 0
 
 	def draw(self):
-		new_img = rot_center(self.sprite, self.rect, 270-self.rotation)
+		new_img = rot_center(self.sprite, self.rect, 270-self.rot)
 		self.screen.blit(new_img[0], (self.pos[0], self.pos[1]))
 
 	def move(self, player_pos):
-		ready_to_shoot = false
+		ready_to_shoot = False
 		if self.step_count >= self.approach_steps:
 			# We reached target pos, getting a new target pos to move to
-			self.pos_target = [player_pos[0], player_pos[1]]s
+			self.pos_target = [player_pos[0], player_pos[1]]
 			self.step_count = 0
-			ready_to_shoot = true
+			ready_to_shoot = True
 
 		# Converting player position on the camera to the position on the map
 		for i in range(0,2):
@@ -329,20 +333,34 @@ class battle_opponent:
 				self.rot = -180 + self.rot
 			else:
 				self.rot = 180 + self.rot
+		
 		if ready_to_shoot == True:
 			self.shoot()
 
 		self.step_count +=1
 
-		for k, v in self.bullets:
-			v.move()
+		if len(self.bullets) > 0:
+			for k in self.bullets:
+				self.bullets[k].move()
+				col = self.bullets[k].collide(player_pos)
+				if col == True:
+					return True
+				self.bullets[k].draw()
+		return False
 
-			
+
 	def upgrade(self):
 		if self.era < 2:
 			self.era += 1
 
 	def shoot(self):
 		bull_name = "bullet" + str(self.bull_num)
-		self.bullets[bull_name] = bullet(self.pos[0], self.pos[1], self.rotation, self.bull_sprite)
+		self.bullets[bull_name] = bullet(self.pos[0], self.pos[1], self.rot, self.bull_sprite, self.screen)
 		self.bull_num += 1
+
+	def reset(self):
+		self.pos = [random.randint(10, display_width - 10), random.randint(10, display_height - 150)]
+		self.pos_target = [random.randint(10, display_width - 10), random.randint(10, display_height - 150)]
+		self.step_count = 0 
+		self.bullets = {}
+		self.bull_num = 0

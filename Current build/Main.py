@@ -78,6 +78,7 @@ class game():
 
 		#sprite load
 		self.plane = battle_plane(self.screen, display_width/2, display_height/2, self.jetplane, self.bull_sprite)
+		self.enemy = battle_opponent(self.screen, self.jetplane, self.bull_sprite)
 		self.player = map_plane(200, 200, self.map_group, self.era, self.screen)
 
 		self.opponents = []
@@ -298,15 +299,24 @@ class game():
 			scene = self.river
 		if random_num == 2:
 			scene = self.grass
+		
+		self.enemy.reset()
+
 		while battle:
 			self.screen.blit(scene, (0,0))
 			self.events()
 			self.plane.events() # checks for input
-			col_check = self.plane.move() #checks for crash into ground
+			win = self.plane.move(self.enemy.pos) #checks for crash into ground
+			kill = self.enemy.move(self.plane.pos)
 			self.plane.draw()
-			pg.display.update()
-			if col_check == True: # kills player
+			self.enemy.draw()
+			if kill == True:
 				self.quitscreen()
+			if win == True:
+				self.patrol()
+
+			pg.display.update()
+
 	def upgrade(self):
 		# plane.upgrade()
 		# player.upgrade()
