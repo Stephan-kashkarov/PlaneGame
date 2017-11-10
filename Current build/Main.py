@@ -5,21 +5,21 @@ from sys import *
 from functions import *
 
 class game():
-	"""docstring for screen"""
+	"""Class of the game"""
 	def __init__(self, display_height, display_width, fps):
-		pg.init()
+		pg.init() # initializes pygame
 		pg.mixer.init()
-		self.camera_size = [display_width, display_height]
-		self.fps = fps
-		self.screen = pg.display.set_mode((self.camera_size[0], self.camera_size[1]))
-		pg.display.set_caption(title)
+		self.camera_size = [display_width, display_height] #sets the dimetions for screen
+		self.fps = fps # setst the fps
+		self.screen = pg.display.set_mode((self.camera_size[0], self.camera_size[1])) # makes the sreen
+		pg.display.set_caption(title) # makes the title
 		self.clock = pg.time.Clock()
-		pg.key.set_repeat(100, 50)
+		pg.key.set_repeat(100, 50) # allows key repeat
 		self.loadingscrn = pg.image.load("img/loadingscrn.png")
 		self.screen.blit(self.loadingscrn, (0,0))
 		pg.display.update()
 		self.era = 0
-		self.load_data()
+		self.load_data() # loads all the data for game
 		self.camera_pos = [0,0]
 
 
@@ -40,7 +40,7 @@ class game():
 		self.screen.blit(text_surf, text_rect) # print button
 
 
-	def events(self):
+	def events(self): # quit button loop
 		for event in pg.event.get():
 			if event.type == pg.QUIT:
 				pg.quit()
@@ -50,7 +50,7 @@ class game():
 					pg.quit()
 					quit()
 
-	def load_data(self):
+	def load_data(self): # loads all sprites
 		self.biplane = pg.image.load("img/PLANE 2 N.png")
 		self.monoplane = pg.image.load("img/PLANE 1 N.png")
 		self.jetplane = pg.image.load("img/yak.png")
@@ -90,23 +90,23 @@ class game():
 		# self.shoot = pg.mixer
 		self.endmusic = pg.mixer.music.load("music/game_music.mp3")
 
-	def intro(self):
-		self.screen.blit(self.full_logo, (0,0))
+	def intro(self): # intro screen
+		self.screen.blit(self.full_logo, (0,0)) # logo print
 		intro = True
 		while intro:
 			self.events()
 			click = pg.mouse.get_pressed() # Get the mouse button state
-			if click[0] == 1:
+			if click[0] == 1: #checks for clicks
 				intro = False
 			pg.display.flip()
 			self.clock.tick(fps)
 
-	def menu(self):
-		self.screen.fill(black)
+	def menu(self):# meny screen
+		self.screen.fill(black) # makes black background
 		pg.display.update()
 		self.screen.blit(self.logo,(display_width/2-256/2, display_height/2-144/2))
 		menu = True
-		while menu:
+		while menu: #menu loop
 			self.events()
 			self.button("PLAY!", 200, 450, 200, 100, d_green, green, self.hq) # makes a play button
 			self.button("QUIT!", 880, 450, 200, 100, d_red, red, quits) # makes a quit button
@@ -114,19 +114,19 @@ class game():
 			pg.display.update()
 			self.clock.tick(fps)
 
-	def hq(self):
-		self.screen.fill(grey)
-		pg.draw.rect(self.screen, d_grey, (0, 0, 1280, 50))
-		pg.draw.rect(self.screen, d_grey, (0, 500, 800, 220))
-		roted_img = rot_center(self.jetplane, self.jetplane.get_rect(), 270)
-		pg.draw.rect(self.screen, white, (0, 100, 1280, 150))
-		self.screen.blit(roted_img[0], (200,100))
-		self.screen.blit(self.jetplane, (50, 275))
-		self.screen.blit(self.jetplane, (175, 275))
-		self.screen.blit(self.jetplane, (300, 275))
-		self.screen.blit(self.jetplane, (425, 275))
+	def hq(self): # sub menu screen
+		self.screen.fill(grey) # draw gui
+		pg.draw.rect(self.screen, d_grey, (0, 0, 1280, 50)) # draw gui
+		pg.draw.rect(self.screen, d_grey, (0, 500, 800, 220)) # draw gui
+		roted_img = rot_center(self.jetplane, self.jetplane.get_rect(), 270) # draw gui
+		pg.draw.rect(self.screen, white, (0, 100, 1280, 150)) # draw gui
+		self.screen.blit(roted_img[0], (200,100)) # draw gui
+		self.screen.blit(self.jetplane, (50, 275)) # draw gui
+		self.screen.blit(self.jetplane, (175, 275)) # draw gui
+		self.screen.blit(self.jetplane, (300, 275)) # draw gui
+		self.screen.blit(self.jetplane, (425, 275)) # draw gui
 		buttons = True
-		while buttons:
+		while buttons: #buttons
 			self.button("Back!", 30, 530, 200, 180, red, d_red, self.menu)
 			self.button("GO!", 490, 530, 200, 180, green, d_green, self.patrol)
 			self.events()
@@ -134,7 +134,7 @@ class game():
 			self.clock.tick(fps)
 
 
-	def patrol(self):
+	def patrol(self): #Patrol phase
 		patroling = True
 		self.screen.fill(black)
 		self.camera_pos = [0,0]
@@ -143,8 +143,8 @@ class game():
 
 		offset_this_frame = [0,0]
 
-		while patroling:
-			self.player.move()
+		while patroling: # patrol loop
+			self.player.move() # simulates plane for one step
 			# print("current_pos: ", self.player.pos, ", prev_player_pos: ", prev_player_pos)
 
 			for i in range(0,2):
@@ -229,12 +229,12 @@ class game():
 
 				prev_player_pos[i] = self.player.pos[i]
 
-			for opponent in self.opponents:
+			for opponent in self.opponents: # move alive opponents
 				if not opponent.defeated:
 					opponent.move(self.player.pos, self.camera_pos)
 
 			# print("prev_player_pos: ", prev_player_pos)
-			col_check = self.player.collision(1227, 490, self.camera_pos)
+			col_check = self.player.collision(1227, 490, self.camera_pos) # airport collision check
 			if col_check != True:
 				col_check = self.player.collision(521, 5192, self.camera_pos)
 				if col_check != True:
@@ -245,7 +245,7 @@ class game():
 			if col_check == True:
 				self.hq()
 
-			col_check = self.player.collision(1243, 3784, self.camera_pos)
+			col_check = self.player.collision(1243, 3784, self.camera_pos)  # airport collision check
 			if col_check != True:
 				col_check = self.player.collision(2581, 49, self.camera_pos)
 				if col_check != True:
@@ -257,7 +257,7 @@ class game():
 				self.hq()
 
 			if col_check != True:
-				col_check = self.player.collision(6344, 6854, self.camera_pos)
+				col_check = self.player.collision(6344, 6854, self.camera_pos)  # airport collision check
 				if col_check != True:
 					col_check = self.player.collision(6076, 4311, self.camera_pos)
 					if col_check != True:
@@ -266,16 +266,16 @@ class game():
 			if col_check == True:
 				self.hq()
 
-			for opponent in self.opponents:
+			for opponent in self.opponents: # checks for opponent collision
 				if not opponent.defeated:
 					battle_check = opponent.collision(self.player.pos)
 					if battle_check == True:
 						self.battle()
 
-			self.screen.blit(self.map_img, (-self.camera_pos[0], -self.camera_pos[1]))
+			self.screen.blit(self.map_img, (-self.camera_pos[0], -self.camera_pos[1])) #print camera with map
 			self.player.draw()
 
-			for opponent in self.opponents:
+			for opponent in self.opponents: # print alive opponents
 				if not opponent.defeated:
 					opponent.draw()
 
@@ -288,10 +288,10 @@ class game():
 
 
 
-	def battle(self):
+	def battle(self): # battle sequence
 		self.screen.fill(black)
 		battle = True
-		random_num = random.randint(0,2)
+		random_num = random.randint(0,2) # randomise map
 		if random_num == 0:
 			scene = self.trees
 		if random_num == 1:
@@ -301,18 +301,18 @@ class game():
 		while battle:
 			self.screen.blit(scene, (0,0))
 			self.events()
-			self.plane.events()
-			col_check = self.plane.move()
+			self.plane.events() # checks for input
+			col_check = self.plane.move() #checks for crash into ground
 			self.plane.draw()
 			pg.display.update()
-			if col_check == True:
+			if col_check == True: # kills player
 				self.quitscreen()
 	def upgrade(self):
 		# plane.upgrade()
 		# player.upgrade()
 		pass
 
-	def quitscreen(self):
+	def quitscreen(self): # death screen
 		end = True
 		while end:
 			self.screen.blit(self.quitscrn, (0,0))
