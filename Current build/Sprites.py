@@ -163,10 +163,8 @@ class battle_plane:
 			self.pos[1] += math.sin(math.radians(self.rotation)) * self.speed
 			print("pos", self.pos, ", speed", self.speed, ", rotation", self.rotation)
 
-		for i in self.bullets:
-			i.move()
-
-
+		for k, v in self.bullets:
+			v.move()
 
 	def upgrade(self):
 		if self.era < 2:
@@ -283,3 +281,68 @@ class bullet:
 		if self.x >= target_pos[0] and self.x <= target_pos[0] + 5:
 			if self.x >= target_pos[0] and self.x <= target_pos[0] + 5:
 				return True
+
+class battle_opponent:
+	def __init__(self, screen, x, y, sprite, bull_sprite):
+		self.pos = [x,y]
+		self.pos_target = [random.randint(10, display_width - 10), random.randint(10, display_height - 150)]
+		self.rot = 0
+		self.sprite = pg.transform.scale(sprite, (20,20))
+		self.rect = self.sprite.get_rect()
+		self.screen = screen
+		self.era = 0
+		self.rotation = 0
+		self.approach_steps = fps*5
+		self.step_count = 0 
+		self.bull_sprite = bull_sprite
+		self.bullets = {}
+		self.bull_num = 0
+
+	def draw(self):
+		new_img = rot_center(self.sprite, self.rect, 270-self.rotation)
+		self.screen.blit(new_img[0], (self.pos[0], self.pos[1]))
+
+	def move(self, player_pos):
+		ready_to_shoot = false
+		if self.step_count >= self.approach_steps:
+			# We reached target pos, getting a new target pos to move to
+			self.pos_target = [player_pos[0], player_pos[1]]s
+			self.step_count = 0
+			ready_to_shoot = true
+
+		# Converting player position on the camera to the position on the map
+		for i in range(0,2):
+			distance = self.pos_target[i] - self.pos[i]
+			self.pos[i] += distance/(self.approach_steps - self.step_count)
+
+		# Plane rotation
+		run = self.pos_target[0] - self.pos[0]
+		rise = self.pos_target[1] - self.pos[1]
+		if run == 0:
+			run = 1
+		gradient = rise/run
+
+		#print(gradient)
+		self.rot = math.degrees(math.atan(gradient))
+		if run <= 0:
+			if rise > 0:
+				self.rot = -180 + self.rot
+			else:
+				self.rot = 180 + self.rot
+		if ready_to_shoot == True:
+			self.shoot()
+
+		self.step_count +=1
+
+		for k, v in self.bullets:
+			v.move()
+
+			
+	def upgrade(self):
+		if self.era < 2:
+			self.era += 1
+
+	def shoot(self):
+		bull_name = "bullet" + str(self.bull_num)
+		self.bullets[bull_name] = bullet(self.pos[0], self.pos[1], self.rotation, self.bull_sprite)
+		self.bull_num += 1
