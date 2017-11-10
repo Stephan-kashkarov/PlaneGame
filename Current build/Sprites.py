@@ -144,6 +144,8 @@ class battle_plane:
 
 	def move(self):
 		# Velocity
+		if self.pos[1] >= display_height - 100:
+			return True
 		if self.throttle > 1:
 			self.throttle = 1
 		if self.throttle < 0.2:
@@ -154,12 +156,6 @@ class battle_plane:
 			self.pos[0] += math.cos(math.radians(self.rotation)) * self.speed
 			self.pos[1] += math.sin(math.radians(self.rotation)) * self.speed
 			print("pos", self.pos, ", speed", self.speed, ", rotation", self.rotation)
-
-
-	def run(self):
-		self.events()
-		self.move()
-		self.draw()
 
 	def upgrade(self):
 		if self.era < 2:
@@ -172,7 +168,7 @@ class map_opponent:
 		self.era = era
 		self.camera_size = camera_size
 		self.map_size = map_size
-		self.num_steps = fps*random.randint(10, 60)	# this is how many steps it will take to reach the player
+		self.num_steps = fps*random.randint(3, 30)	# this is how many steps it will take to reach the player
 		self.step_count = 0
 		self.draw_me = False
 		self.pos_on_screen = [0,0]
@@ -248,3 +244,6 @@ class map_opponent:
 			if self.pos_on_screen[1] <= target_pos_on_screen[1] + 60 and self.pos_on_screen[1] >= target_pos_on_screen[1]:
 				print("collision")
 				return True
+
+# class battle_opponent:
+# 	def __init__()

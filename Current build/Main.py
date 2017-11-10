@@ -15,6 +15,9 @@ class game():
 		pg.display.set_caption(title)
 		self.clock = pg.time.Clock()
 		pg.key.set_repeat(100, 50)
+		self.loadingscrn = pg.image.load("img/loadingscrn.png")
+		self.screen.blit(self.loadingscrn, (0,0))
+		pg.display.update()
 		self.era = 0
 		self.load_data()
 		self.camera_pos = [0,0]
@@ -60,6 +63,7 @@ class game():
 		self.river = pg.image.load("img/riverbttl.png")
 		self.grass = pg.image.load("img/grassbttl.png")
 		self.quitscrn = pg.image.load("img/quit.png")
+		self.loadingscrn = pg.image.load("img/loadingscrn.png")
 		self.map_group = [self.biplane, self.monoplane, self.jetplane]
 
 		#map load
@@ -308,9 +312,12 @@ class game():
 		while battle:
 			self.screen.blit(scene, (0,0))
 			self.events()
-			self.plane.run()
+			self.plane.events()
+			col_check = self.plane.move()
+			self.plane.draw()
 			pg.display.update()
-
+			if col_check == True:
+				self.quitscreen()
 	def upgrade(self):
 		# plane.upgrade()
 		# player.upgrade()
@@ -325,8 +332,8 @@ class game():
 
 
 instance = game(display_height, display_width, fps)
-# instance.intro()
-# instance.menu()
-# instance.patrol()
-instance.battle()
-# quit()
+instance.intro()
+instance.menu()
+instance.patrol()
+# instance.battle()
+# # quit()
