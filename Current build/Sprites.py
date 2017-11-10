@@ -245,5 +245,22 @@ class map_opponent:
 				print("collision")
 				return True
 
-# class battle_opponent:
-# 	def __init__()
+class bullet:
+	def __init__(self, x, y, rot, sprite):
+		self.x = x
+		self.y = y
+		self.rot = rot
+		self.sprite = rot_center(sprite, sprite.get_rect(), self.rot)
+		self.speed = 10
+
+	def move(self):
+		self.x += math.cos(math.radians(self.rot)) * self.speed
+		self.y += math.sin(math.radians(self.rot)) * self.speed
+
+	def draw(self):
+		self.screen.blit(sprite, (x,y))
+
+	def collide(self, target_pos):
+		if self.x >= target_pos[0] amd self.x <= target_pos[0] + 5:
+			if self.x >= target_pos[0] amd self.x <= target_pos[0] + 5:
+				return True
