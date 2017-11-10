@@ -188,6 +188,7 @@ class map_opponent:
 		self.step_count = 0
 		self.draw_me = False
 		self.pos_on_screen = [0,0]
+		self.defeated = False
 
 		print("NumSteps: ", self.num_steps, "Seconds: ", self.num_steps/fps, "good luck running!")
 
@@ -227,7 +228,9 @@ class map_opponent:
 					on_screen[i] = True
 
 			if on_screen[0] == True and on_screen[1] == True:
-				self.draw_me = True
+				if self.draw_me == False:
+					self.num_steps += 5*fps	# add steps for on-screen approach
+					self.draw_me = True
 
 				# Plane rotation
 				run = player_pos_on_map[0]-self.pos_on_map[0]
